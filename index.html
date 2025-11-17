@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha³</title>
+
+    <!-- Ordem correta: variáveis → animações → estilos -->
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="dark">
+
+    <header class="header">
+        <!-- Botão do tema -->
+        <button id="themeToggle" class="toggle-btn theme-icon"></button>
+    </header>
+
+    <main class="container">
+        <h1 class="title neon-led">Jogo da Velha³</h1>
+
+        <div class="buttons">
+            <button class="btn velha1" onclick="openGame(1)">Velha #1</button>
+            <button class="btn velha2" onclick="openGame(2)">Velha #2</button>
+            <button class="btn velha3" onclick="openGame(3)">Velha #3</button>
+        </div>
+    </main>
+
+    <footer class="footer neon-footer">
+        Desenvolvido por
+        <a href="https://instagram.com/hebertluisoficial" target="_blank">
+            @hebertluisoficial
+        </a>
+        - Novembro de 2025.
+    </footer>
+
+    <script src="assets/js/global.js"></script>
+    <script src="assets/js/home.js"></script>
+</body>
+
+</html>

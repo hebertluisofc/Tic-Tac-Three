@@ -1,0 +1,181 @@
+/* ===================================
+   RESET E BASE
+=================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-main);
+    transition: background .3s, color .3s, box-shadow .3s;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+/* ===================================
+   HEADER / TOGGLE DE TEMA
+=================================== */
+.header {
+    width: 100%;
+}
+
+.toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 3px solid var(--neon-1);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+    z-index: 999;
+    animation: neonBorder 6s infinite linear;
+}
+
+.toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.theme-icon::before {
+    content: "🌙";
+    font-size: 1.3rem;
+    transition: transform .4s ease, opacity .4s;
+}
+
+.theme-icon.sun::before {
+    content: "☀️";
+    transform: rotate(180deg);
+}
+
+.theme-icon.moon::before {
+    content: "🌙";
+    transform: rotate(-180deg);
+}
+
+/* ===================================
+   CONTAINER E TÍTULO
+=================================== */
+.container {
+    text-align: center;
+    padding: 30px;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 40px;
+}
+
+.neon-led {
+    animation: neonCycle 6s infinite linear;
+}
+
+/* ===================================
+   BOTÕES
+=================================== */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 260px;
+    margin: 0 auto;
+}
+
+.btn {
+    padding: 15px 20px;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s;
+    letter-spacing: 2px;
+    background: transparent;
+    border: 2px solid;
+}
+
+/* Botão Velha 1 */
+.velha1 {
+    border-color: var(--btn-velha1);
+    color: var(--btn-velha1);
+}
+
+.velha1:hover {
+    background: var(--btn-velha1);
+    color: #000;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px var(--btn-velha1);
+}
+
+/* Botão Velha 2 */
+.velha2 {
+    border-color: var(--btn-velha2);
+    color: var(--btn-velha2);
+}
+
+.velha2:hover {
+    background: var(--btn-velha2);
+    color: #000;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px var(--btn-velha2);
+}
+
+/* Botão Velha 3 */
+.velha3 {
+    border-color: var(--btn-velha3);
+    color: var(--btn-velha3);
+}
+
+.velha3:hover {
+    background: var(--btn-velha3);
+    color: #000;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px var(--btn-velha3);
+}
+
+/* ===================================
+   RODAPÉ
+=================================== */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9rem;
+    background: var(--footer-bg);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.neon-footer {
+    animation: neonShadow 6s infinite linear;
+}
+
+.footer a {
+    animation: neonCycle 6s infinite linear;
+    text-decoration: none;
+}
+
+/* ===================================
+   RESPONSIVO
+=================================== */
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.2rem;
+    }
+
+    .buttons {
+        width: 200px;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+    }
+}

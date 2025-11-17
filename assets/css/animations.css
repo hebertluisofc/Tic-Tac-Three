@@ -1,0 +1,69 @@
+/* ===================================
+   ANIMAÇÕES GLOBAIS
+=================================== */
+
+@keyframes neonCycle {
+
+    0%,
+    100% {
+        color: var(--neon-1);
+        text-shadow: 0 0 12px var(--neon-1);
+    }
+
+    33% {
+        color: var(--neon-2);
+        text-shadow: 0 0 12px var(--neon-2);
+    }
+
+    66% {
+        color: var(--neon-3);
+        text-shadow: 0 0 12px var(--neon-3);
+    }
+}
+
+@keyframes neonBorder {
+
+    0%,
+    100% {
+        border-color: var(--neon-1);
+        box-shadow: 0 0 10px var(--neon-1);
+    }
+
+    33% {
+        border-color: var(--neon-2);
+        box-shadow: 0 0 10px var(--neon-2);
+    }
+
+    66% {
+        border-color: var(--neon-3);
+        box-shadow: 0 0 10px var(--neon-3);
+    }
+}
+
+@keyframes neonShadow {
+
+    0%,
+    100% {
+        box-shadow: 0 -3px 10px var(--neon-1);
+    }
+
+    33% {
+        box-shadow: 0 -3px 10px var(--neon-2);
+    }
+
+    66% {
+        box-shadow: 0 -3px 10px var(--neon-3);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
