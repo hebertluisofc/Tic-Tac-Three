@@ -16,13 +16,14 @@
     <!-- HEADER COM BOTÕES FIXOS -->
     <header class="header">
         <button id="themeToggle" class="toggle-btn theme-icon"></button>
+        <h1 class="title neon-led">Velha #1</h1>
         <button id="helpBtn" class="toggle-btn help-icon">?</button>
     </header>
 
     <!-- POPUP DE AJUDA -->
     <div id="helpPopup" class="popup-overlay">
         <div class="popup-content">
-            <h2>Velha #1<br>Como jogar:</h2>
+            <h2>Velha #1 - Como jogar:</h2>
 
             <p>• O jogador <strong>X</strong> começa a partida.</p>
             <p>• Os jogadores alternam turnos marcando uma das 9 células.</p>
@@ -34,39 +35,38 @@
                 <li>diagonal</li>
             </ul>
 
-            <p>• Se todas as células forem preenchidas e ninguém completar uma linha, o jogo termina em <strong>velha</strong>.</p>
+            <p>• Se todas as células forem preenchidas e ninguém completar uma linha, o jogo termina em
+                <strong>velha</strong>.</p>
 
             <button id="closeHelp" class="btn velha3 close-btn">Entendi</button>
         </div>
     </div>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <main class="game-container">
+    <div class="main-content">
+        <main class="game-container">
+            <!-- O texto do jogador da vez será atualizado dinamicamente pelo JS -->
+            <div class="status" id="gameStatus">
+                Vez do jogador: <span id="currentPlayerSpan" class="x-turn">X</span>
+            </div>
 
-        <h1 class="title neon-led">Velha #1</h1>
+            <div class="board" id="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
 
-        <!-- O texto do jogador da vez será atualizado dinamicamente pelo JS -->
-        <div class="status" id="gameStatus">
-            Vez do jogador: <span id="currentPlayerSpan" class="x-turn">X</span>
-        </div>
-
-        <div class="board" id="board">
-            <div class="cell" data-index="0"></div>
-            <div class="cell" data-index="1"></div>
-            <div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell" data-index="7"></div>
-            <div class="cell" data-index="8"></div>
-        </div>
-
-        <div class="controls">
-            <button class="btn velha1" id="restartBtn">Reiniciar</button>
-            <button class="btn velha2" id="homeBtn">Voltar</button>
-        </div>
-
+            <div class="controls">
+                <button class="btn velha1" id="restartBtn">Reiniciar</button>
+                <button class="btn velha2" id="homeBtn">Voltar</button>
+            </div>
+    </div>
     </main>
 
     <!-- RODAPÉ -->
