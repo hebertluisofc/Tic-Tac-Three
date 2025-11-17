@@ -5,22 +5,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;600&display=swap');
 
 :root {
+    /* --------------------------------- */
     /* Cores neon */
+    /* --------------------------------- */
     --neon-1: #00eaff;
     --neon-2: #b026ff;
     --neon-3: #ff009d;
 
-    /* Cores dos botões */
+    /* --------------------------------- */
+    /* Cores dos botões Velha */
+    /* --------------------------------- */
     --btn-velha1: #00ffa6;
     --btn-velha2: #ffb300;
     --btn-velha3: #ff0048;
 
-    /* Tema padrão (light) */
+    /* --------------------------------- */
+    /* Tema padrão (Light) */
+    /* --------------------------------- */
     --bg: #fafafa;
     --text: #1a1a1a;
     --footer-bg: #e5e5e5;
 
-    /* Fontes */
+    /* --------------------------------- */
+    /* Jogadores X e O */
+    /* --------------------------------- */
+    --playerX: #00ffcc;
+    --playerY: #ff44aa;
+
+    /* --------------------------------- */
+    /* Fontes principais */
+    /* --------------------------------- */
     --font-main: 'Orbitron', sans-serif;
 }
 

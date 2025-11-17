@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velha #1</title>
+
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER COM BOTÕES FIXOS -->
+    <header class="header">
+        <button id="themeToggle" class="toggle-btn theme-icon"></button>
+        <button id="helpBtn" class="toggle-btn help-icon">?</button>
+    </header>
+
+    <!-- POPUP DE AJUDA -->
+    <div id="helpPopup" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Velha #1<br>Como jogar:</h2>
+
+            <p>• O jogador <strong>X</strong> começa a partida.</p>
+            <p>• Os jogadores alternam turnos marcando uma das 9 células.</p>
+            <p>• Ganha quem formar uma linha com 3 símbolos iguais:</p>
+
+            <ul>
+                <li>linha horizontal</li>
+                <li>linha vertical</li>
+                <li>diagonal</li>
+            </ul>
+
+            <p>• Se todas as células forem preenchidas e ninguém completar uma linha, o jogo termina em <strong>velha</strong>.</p>
+
+            <button id="closeHelp" class="btn velha3 close-btn">Entendi</button>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="game-container">
+
+        <h1 class="title neon-led">Velha #1</h1>
+
+        <!-- O texto do jogador da vez será atualizado dinamicamente pelo JS -->
+        <div class="status" id="gameStatus">
+            Vez do jogador: <span id="currentPlayerSpan" class="x-turn">X</span>
+        </div>
+
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn velha1" id="restartBtn">Reiniciar</button>
+            <button class="btn velha2" id="homeBtn">Voltar</button>
+        </div>
+
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="footer neon-footer">
+        Desenvolvido por
+        <a href="https://instagram.com/hebertluisoficial" target="_blank">@hebertluisoficial</a> — 2025
+    </footer>
+
+    <script src="../js/global.js" defer></script>
+    <script src="../js/velha1.js" defer></script>
+</body>
+
+</html>

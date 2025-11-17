@@ -21,9 +21,7 @@ body {
 /* ===================================
    HEADER / TOGGLE DE TEMA
 =================================== */
-.header {
-    width: 100%;
-}
+.header { width: 100%; }
 
 .toggle-btn {
     position: fixed;
@@ -43,9 +41,7 @@ body {
     animation: neonBorder 6s infinite linear;
 }
 
-.toggle-btn:hover {
-    transform: scale(1.1);
-}
+.toggle-btn:hover { transform: scale(1.1); }
 
 .theme-icon::before {
     content: "🌙";
@@ -53,15 +49,8 @@ body {
     transition: transform .4s ease, opacity .4s;
 }
 
-.theme-icon.sun::before {
-    content: "☀️";
-    transform: rotate(180deg);
-}
-
-.theme-icon.moon::before {
-    content: "🌙";
-    transform: rotate(-180deg);
-}
+.theme-icon.sun::before { content: "☀️"; transform: rotate(180deg); }
+.theme-icon.moon::before { content: "🌙"; transform: rotate(-180deg); }
 
 /* ===================================
    CONTAINER E TÍTULO
@@ -72,14 +61,9 @@ body {
     animation: fadeIn 1.2s ease-in-out;
 }
 
-.title {
-    font-size: 3rem;
-    margin-bottom: 40px;
-}
+.title { font-size: 3rem; margin-bottom: 40px; }
 
-.neon-led {
-    animation: neonCycle 6s infinite linear;
-}
+.neon-led { animation: neonCycle 6s infinite linear; }
 
 /* ===================================
    BOTÕES
@@ -103,44 +87,15 @@ body {
     border: 2px solid;
 }
 
-/* Botão Velha 1 */
-.velha1 {
-    border-color: var(--btn-velha1);
-    color: var(--btn-velha1);
-}
+/* Botões Velha */
+.velha1 { border-color: var(--btn-velha1); color: var(--btn-velha1); }
+.velha1:hover { background: var(--btn-velha1); color: #000; transform: scale(1.08); box-shadow: 0 0 15px var(--btn-velha1); }
 
-.velha1:hover {
-    background: var(--btn-velha1);
-    color: #000;
-    transform: scale(1.08);
-    box-shadow: 0 0 15px var(--btn-velha1);
-}
+.velha2 { border-color: var(--btn-velha2); color: var(--btn-velha2); }
+.velha2:hover { background: var(--btn-velha2); color: #000; transform: scale(1.08); box-shadow: 0 0 15px var(--btn-velha2); }
 
-/* Botão Velha 2 */
-.velha2 {
-    border-color: var(--btn-velha2);
-    color: var(--btn-velha2);
-}
-
-.velha2:hover {
-    background: var(--btn-velha2);
-    color: #000;
-    transform: scale(1.08);
-    box-shadow: 0 0 15px var(--btn-velha2);
-}
-
-/* Botão Velha 3 */
-.velha3 {
-    border-color: var(--btn-velha3);
-    color: var(--btn-velha3);
-}
-
-.velha3:hover {
-    background: var(--btn-velha3);
-    color: #000;
-    transform: scale(1.08);
-    box-shadow: 0 0 15px var(--btn-velha3);
-}
+.velha3 { border-color: var(--btn-velha3); color: var(--btn-velha3); }
+.velha3:hover { background: var(--btn-velha3); color: #000; transform: scale(1.08); box-shadow: 0 0 15px var(--btn-velha3); }
 
 /* ===================================
    RODAPÉ
@@ -154,28 +109,134 @@ body {
     border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.neon-footer {
-    animation: neonShadow 6s infinite linear;
-}
+.neon-footer { animation: neonShadow 6s infinite linear; }
 
-.footer a {
-    animation: neonCycle 6s infinite linear;
-    text-decoration: none;
-}
+.footer a { animation: neonCycle 6s infinite linear; text-decoration: none; }
 
 /* ===================================
    RESPONSIVO
 =================================== */
 @media (max-width: 480px) {
-    .title {
-        font-size: 2.2rem;
-    }
+    .title { font-size: 2.2rem; }
+    .buttons { width: 200px; }
+    .btn { font-size: 1.1rem; }
+}
 
-    .buttons {
-        width: 200px;
-    }
+/* ===================================
+   JOGO DA VELHA
+=================================== */
+.game-container { text-align: center; padding: 30px; animation: fadeIn 1.2s ease-in-out; }
 
-    .btn {
-        font-size: 1.1rem;
-    }
+.status { font-size: 1.4rem; margin-bottom: 20px; }
+
+.board {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 30px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+}
+
+/* Células */
+.cell {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--neon-1);
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color .3s;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    min-width: 80px;
+    min-height: 80px;
+}
+
+/* Bordas neutras e animação para empate */
+.board.board-neutral .cell {
+    border-color: var(--neon-1);
+    animation: neonBorder 6s infinite linear;
+}
+
+/* Cores X e O */
+.x-turn { color: var(--playerX); }
+.cell.x { color: var(--playerX) !important; }
+.cell.x.win { border-color: var(--playerX) !important; }
+
+.o-turn { color: var(--playerY); }
+.cell.o { color: var(--playerY) !important; }
+.cell.o.win { border-color: var(--playerY) !important; }
+
+/* Remove efeito scale de preenchimento */
+.cell.filled { transform: none; }
+
+/* Borda dinâmica do jogador da vez */
+.board.board-x .cell { border-color: var(--playerX); }
+.board.board-o .cell { border-color: var(--playerY); }
+
+/* Texto "Vez do jogador" */
+#gameStatus.x-turn { color: var(--playerX); }
+#gameStatus.o-turn { color: var(--playerY); }
+
+.controls { display: flex; justify-content: center; gap: 20px; }
+
+/* ===================================
+   BOTÃO DE AJUDA
+=================================== */
+.help-icon {
+    right: 15px;
+    left: auto;
+    animation: neonBorder 6s infinite linear;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--neon-1);
+}
+
+/* ===================================
+   POPUP DE AJUDA
+=================================== */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+}
+
+.popup-content {
+    background: var(--bg);
+    color: var(--text);
+    padding: 25px 20px;
+    width: 85%;
+    max-width: 320px;
+    border-radius: 12px;
+    border: 2px solid var(--neon-1);
+    animation: fadeIn .3s ease;
+    text-align: left;
+    box-shadow: 0 0 12px var(--neon-1);
+}
+
+.popup-content h2 { margin-bottom: 10px; font-size: 1.4rem; }
+
+.popup-content ul {
+    text-align: left;
+    margin: 10px 0;
+    padding-left: 18px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.close-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1rem;
 }
