@@ -44,6 +44,13 @@ helpPopup.addEventListener("click", e => {
 updateStatus();
 
 // ========================
+// Mostrar popup de ajuda ao entrar na página
+// ========================
+window.addEventListener("load", () => {
+    helpPopup.style.display = "flex"; // abre o popup automaticamente
+});
+
+// ========================
 // FUNÇÕES DO JOGO
 // ========================
 

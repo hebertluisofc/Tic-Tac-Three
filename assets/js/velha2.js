@@ -48,6 +48,13 @@ updateStatus();
 updateTimerDisplay(); // ⏳ 3.00, cor inicial, sem iniciar a contagem
 
 // ========================
+// Mostrar popup de ajuda ao entrar na página
+// ========================
+window.addEventListener("load", () => {
+    helpPopup.style.display = "flex"; // abre o popup automaticamente
+});
+
+// ========================
 // FUNÇÕES PRINCIPAIS
 // ========================
 function cellClicked() {
