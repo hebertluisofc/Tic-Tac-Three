@@ -11,12 +11,18 @@
     transition: background .3s, color .3s, box-shadow .3s;
 }
 
+html, body {
+    overflow-x: hidden; /* evita scroll horizontal */
+    overflow-y: hidden; /* evita scroll vertical desnecessário */
+    height: 100%;       /* garante que body e html ocupem toda a viewport */
+}
+
 body {
     background: var(--bg);
     color: var(--text);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
 }
 
 body::before {
@@ -42,6 +48,14 @@ body::before {
     opacity: 0.1;
 }
 
+body::before,
+#particlesCanvas {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh; /* garante que não ultrapasse viewport */
+}
 
 
 /* HEADER */
