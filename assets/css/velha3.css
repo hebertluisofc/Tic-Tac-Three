@@ -14,19 +14,13 @@
 
 .cell {
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid var(--btn-velha3);
     font-size: 2.2rem;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-}
-
-/* Células do Velha 3 não clicáveis ainda */
-.cell {
-    pointer-events: none;
-    cursor: default;
+    padding: 4px;
 }
 
 /* Tabuleiro pequeno dentro de cada célula do grande */
@@ -41,18 +35,32 @@
 
 .small-cell {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--btn-velha3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 6px;
     transition: background 0.2s, transform 0.2s;
 }
 
-.small-cell:hover {
-    background: rgba(255, 0, 72, 0.2); /* neon rosa suave */
-    transform: scale(1.05);
+/* Bordas neon padrão dos tabuleiros grandes */
+.cell {
+    transition: border-color 0.3s;
 }
+
+/* Tabuleiro ativo do jogador X */
+.active-board-x {
+    animation: neonShadow 6s infinite linear;
+    border-color: var(--playerX) !important;
+    border-width: 3px;
+}
+
+/* Tabuleiro ativo do jogador O */
+.active-board-o {
+    animation: neonShadow 6s infinite linear;
+    border-color: var(--playerY) !important;
+    border-width: 3px;
+}
+
