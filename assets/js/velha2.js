@@ -151,7 +151,7 @@ function startTimer() {
     updateTimerDisplay();
 
     timer = setInterval(() => {
-        timeRemaining -= 0.1;
+        timeRemaining -= 0.01;
         if (timeRemaining <= 0) {
             clearInterval(timer);
             timeRemaining = 0;
@@ -160,7 +160,7 @@ function startTimer() {
         } else {
             updateTimerDisplay();
         }
-    }, 100);
+    }, 10);
 }
 
 function resetTimer() {
@@ -192,7 +192,7 @@ function updateTimerDisplay() {
 
 function endGameByTimeout() {
     running = false;
-    statusText.innerHTML = `Tempo esgotado! Jogador <span class="${currentPlayer === "X" ? "x-turn" : "o-turn"}">${currentPlayer}</span> perdeu!`;
+    statusText.innerHTML = `Jogador <span class="${currentPlayer === "X" ? "x-turn" : "o-turn"}">${currentPlayer}</span> perdeu por tempo!`;
 }
 
 // ========================
