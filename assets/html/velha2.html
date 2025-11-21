@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../css/animations.css">
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/velha2.css">
 </head>
 
 <body>
@@ -43,15 +44,22 @@
         </div>
     </div>
 
-
     <div class="main-content">
         <main class="game-container">
             <div class="status" id="gameStatus">
                 Vez do jogador: <span id="currentPlayerSpan" class="x-turn">X</span>
             </div>
 
-            <div class="status" id="timerStatus">
-                <span id="timer" style="margin-left: 15px; color: var(--btn-velha1);">⏳ 3.00</span>
+            <div class="status timer-container">
+                <!-- Contêiner do seletor de tempo -->
+                <div id="timerSelectorContainer" class="timer-selector">
+                    <label for="timeRange">Tempo por jogada:</label>
+                    <input type="range" min="1" max="6" step="1" id="timerRange" value="3">
+                    <span id="timerValue">3s</span>
+                </div>
+
+                <!-- Contêiner do timer (oculto antes da primeira jogada) -->
+                <div id="timer" class="timer-display">⏳ 3.00</div>
             </div>
 
             <div class="board" id="board">

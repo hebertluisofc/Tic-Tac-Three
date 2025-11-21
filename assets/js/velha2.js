@@ -4,7 +4,7 @@
 
 /* ========================
    1. ELEMENTOS DA INTERFACE
-   ======================== */
+======================== */
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("gameStatus");
 const restartBtn = document.getElementById("restartBtn");
@@ -12,11 +12,15 @@ const homeBtn = document.getElementById("homeBtn");
 const helpBtn = document.getElementById("helpBtn");
 const helpPopup = document.getElementById("helpPopup");
 const closeHelp = document.getElementById("closeHelp");
+
+const timerSelectorContainer = document.getElementById("timerSelectorContainer");
+const timerRange = document.getElementById("timerRange");
+const timerValue = document.getElementById("timerValue");
 const timerDisplay = document.getElementById("timer");
 
 /* ========================
    2. VARIÁVEIS DO JOGO
-   ======================== */
+======================== */
 let board = Array(9).fill("");
 let currentPlayer = "X";
 let running = true;
@@ -27,56 +31,84 @@ let selectedPiece = null;
 
 // Timer
 let timer = null;
-let timeLimit = 3.0;
+let timeLimit = parseFloat(timerRange.value);
 let timeRemaining = timeLimit;
 let timerActive = false;
 
 const winPatterns = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
 ];
+
+// Thumb colors
+const thumbColors = {
+    1: "#ff0048",
+    2: "#ff5e00",
+    3: "#ffb300",
+    4: "#fdd77d",
+    5: "#00ffa6",
+    6: "#00eaff"  
+};
 
 /* ========================
    3. EVENTOS
-   ======================== */
+======================== */
 cells.forEach(cell => cell.addEventListener("click", cellClicked));
 restartBtn.addEventListener("click", restartGame);
 homeBtn.addEventListener("click", () => window.location.href = "../../index.html");
 
 helpBtn.addEventListener("click", () => helpPopup.style.display = "flex");
 closeHelp.addEventListener("click", () => helpPopup.style.display = "none");
-helpPopup.addEventListener("click", e => { if (e.target === helpPopup) helpPopup.style.display = "none"; });
+helpPopup.addEventListener("click", e => { if(e.target===helpPopup) helpPopup.style.display="none"; });
+
+// Slider
+timerRange.addEventListener("input", () => {
+    const val = parseInt(timerRange.value);
+    updateThumbColor(val);
+});
 
 /* ========================
    4. INICIALIZAÇÃO
-   ======================== */
-window.addEventListener("load", () => { helpPopup.style.display = "flex"; });
-
-updateStatus();
-updateTimerDisplay();
+======================== */
+window.addEventListener("load", () => {
+    helpPopup.style.display = "flex";
+    updateStatus();
+    updateTimerDisplay();
+    updateThumbColor(timerRange.value);
+    // Inicialmente: mostra seletor, esconde timer
+    timerDisplay.style.display = "none";
+    timerSelectorContainer.style.display = "flex";
+});
 
 /* ========================
    5. FUNÇÕES PRINCIPAIS
-   ======================== */
+======================== */
 function cellClicked() {
     if (!running) return;
 
-    const index = parseInt(this.dataset.index);
-
-    // Inicia timer na primeira jogada
+    // Configura tempo antes da primeira jogada
     if (!timerActive) {
+        timeLimit = parseInt(timerRange.value);
+        if (timeLimit === 6) timeLimit = Infinity;
+        timeRemaining = timeLimit;
         startTimer();
         timerActive = true;
+
+        // Oculta seletor, mostra timer
+        timerSelectorContainer.style.display = "none";
+        timerDisplay.style.display = "flex";
     }
 
-    // Caso esteja movendo uma peça
+    const index = parseInt(this.dataset.index);
+
+    // Movendo peça
     if (selectedPiece !== null) {
         if (board[index] === "") {
             movePiece(selectedPiece, index);
             selectedPiece = null;
             cells.forEach(c => c.classList.remove("selected"));
-            if (running) resetTimer();
+            if (running && timeLimit !== Infinity) resetTimer();
         }
         else if (board[index] === currentPlayer) {
             cells[selectedPiece].classList.remove("selected");
@@ -103,15 +135,13 @@ function cellClicked() {
 
 function placePiece(index) {
     board[index] = currentPlayer;
-
     cells[index].textContent = currentPlayer;
     cells[index].classList.add("filled", currentPlayer === "X" ? "x" : "o");
-
     playerMoves[currentPlayer]++;
 
     if (!checkWinner(currentPlayer)) {
         changePlayer();
-        resetTimer();
+        if (timeLimit !== Infinity) resetTimer();
     } else {
         stopTimer();
     }
@@ -125,11 +155,11 @@ function movePiece(fromIndex, toIndex) {
     cells[toIndex].classList.add("filled", currentPlayer === "X" ? "x" : "o");
 
     cells[fromIndex].textContent = "";
-    cells[fromIndex].classList.remove("filled", "x", "o", "win", "selected");
+    cells[fromIndex].classList.remove("filled","x","o","win","selected");
 
     if (!checkWinner(currentPlayer)) {
         changePlayer();
-        resetTimer();
+        if (timeLimit !== Infinity) resetTimer();
     } else {
         stopTimer();
     }
@@ -137,16 +167,11 @@ function movePiece(fromIndex, toIndex) {
 
 /* ========================
    6. FUNÇÕES AUXILIARES
-   ======================== */
+======================== */
 function updateStatus() {
     if (!running) return;
-
     const colorClass = currentPlayer === "X" ? "x-turn" : "o-turn";
     statusText.innerHTML = `Vez do jogador: <span class="${colorClass}">${currentPlayer}</span>`;
-
-    const boardEl = document.querySelector(".board");
-    boardEl.classList.remove("board-x", "board-o");
-    boardEl.classList.add(currentPlayer === "X" ? "board-x" : "board-o");
 }
 
 function changePlayer() {
@@ -154,27 +179,41 @@ function changePlayer() {
     updateStatus();
 }
 
+function updateThumbColor(value) {
+    const color = thumbColors[value] || "var(--btn-velha3)";
+    timerRange.style.setProperty("--thumb-color", color);
+    timerRange.style.setProperty("--moz-thumb-color", color);
+
+    if (value == 6) {
+        timerValue.textContent = "♾️";
+        timerValue.style.color = thumbColors[6]; // azul
+    } else {
+        timerValue.textContent = value + "s";
+        timerValue.style.color = color; // mesma cor do thumb
+    }
+}
+
 /* ========================
    7. TIMER
-   ======================== */
+======================== */
 function startTimer() {
-    clearInterval(timer);
-    timerActive = true;
+    if(timeLimit === Infinity) {
+        timerDisplay.textContent = "⏳ ♾️";
+        return;
+    }
 
+    clearInterval(timer);
     timeRemaining = timeLimit;
     updateTimerDisplay();
 
     timer = setInterval(() => {
         timeRemaining -= 0.01;
-
-        if (timeRemaining <= 0) {
+        if(timeRemaining <= 0) {
             clearInterval(timer);
             timeRemaining = 0;
             updateTimerDisplay();
             endGameByTimeout();
-        } else {
-            updateTimerDisplay();
-        }
+        } else updateTimerDisplay();
     }, 10);
 }
 
@@ -193,52 +232,46 @@ function stopTimer() {
 }
 
 function updateTimerDisplay() {
-    timerDisplay.textContent = `⏳ ${timeRemaining.toFixed(2)}`;
-
-    if (timeRemaining <= 1) {
-        timerDisplay.style.color = "var(--btn-velha3)";
-    } else if (timeRemaining <= 2) {
-        timerDisplay.style.color = "var(--btn-velha2)";
-    } else {
-        timerDisplay.style.color = "var(--btn-velha1)";
+    if (timeLimit === Infinity) {
+        timerDisplay.textContent = "⏳ ♾️";
+        timerDisplay.style.color = thumbColors[6]; // azul
+        return;
     }
-}
 
-function endGameByTimeout() {
-    running = false;
-    const colorClass = currentPlayer === "X" ? "x-turn" : "o-turn";
-    statusText.innerHTML = `Jogador <span class="${colorClass}">${currentPlayer}</span> perdeu!`;
+    // Determina o segundo atual (arredonda para cima)
+    const currentSecond = Math.ceil(timeRemaining);
+
+    // Para cores, pegamos do 1 até timeLimit
+    let colorIndex = Math.min(currentSecond, timeLimit); // evita passar do número máximo
+    timerDisplay.style.color = thumbColors[colorIndex];
+
+    timerDisplay.textContent = `⏳ ${timeRemaining.toFixed(2)}`;
 }
 
 /* ========================
    8. VERIFICAÇÃO DE VITÓRIA
-   ======================== */
+======================== */
 function checkWinner(player) {
     let winningPattern = null;
 
     for (const p of winPatterns) {
-        const [a, b, c] = p;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        const [a,b,c] = p;
+        if(board[a] && board[a] === board[b] && board[a] === board[c]){
             winningPattern = p;
             break;
         }
     }
 
-    if (winningPattern) {
+    if(winningPattern){
         running = false;
-
         const colorClass = player === "X" ? "x-turn" : "o-turn";
         statusText.innerHTML = `Jogador <span class="${colorClass}">${player}</span> venceu!`;
 
-        winningPattern.forEach(i => {
+        winningPattern.forEach(i=>{
             cells[i].classList.add("win");
-            cells[i].classList.remove("x", "o");
-            cells[i].classList.add(player === "X" ? "x" : "o");
+            cells[i].classList.remove("x","o");
+            cells[i].classList.add(player==="X"?"x":"o");
         });
-
-        const boardEl = document.querySelector(".board");
-        boardEl.classList.remove("board-x", "board-o");
-        boardEl.classList.add(player === "X" ? "board-x" : "board-o");
 
         stopTimer();
         return true;
@@ -248,31 +281,37 @@ function checkWinner(player) {
 }
 
 /* ========================
-   9. REINICIAR JOGO
-   ======================== */
-function restartGame() {
+   9. FIM POR TEMPO
+======================== */
+function endGameByTimeout() {
+    running = false;
+    const colorClass = currentPlayer==="X"?"x-turn":"o-turn";
+    statusText.innerHTML = `Jogador <span class="${colorClass}">${currentPlayer}</span> perdeu por tempo!`;
+}
+
+/* ========================
+   10. REINICIAR JOGO
+======================== */
+function restartGame(){
     board.fill("");
     currentPlayer = "X";
     running = true;
 
-    playerMoves = { X: 0, O: 0 };
+    playerMoves = { X:0, O:0 };
     selectedPiece = null;
 
-    cells.forEach(c => {
-        c.textContent = "";
-        c.classList.remove("filled", "x", "o", "win", "selected");
-        c.style.animation = "";
+    cells.forEach(c=>{
+        c.textContent="";
+        c.classList.remove("filled","x","o","win","selected");
     });
 
-    const boardEl = document.querySelector(".board");
-    boardEl.classList.remove("board-x", "board-o");
-    boardEl.classList.add("board-x");
-
-    stopTimer();
+    // Reseta timer e seletor
+    timerDisplay.style.display="none";
+    timerSelectorContainer.style.display="flex";
     timerActive = false;
-
+    timeLimit = parseInt(timerRange.value);
     timeRemaining = timeLimit;
+    updateThumbColor(timerRange.value);
     updateTimerDisplay();
-
     updateStatus();
 }

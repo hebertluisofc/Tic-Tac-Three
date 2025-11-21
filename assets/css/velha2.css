@@ -1,0 +1,100 @@
+/* Contêiner fixo para seletor e timer */
+.timer-container {
+    position: relative;
+    width: 180px; /* largura suficiente para range + texto */
+    height: 50px; /* altura fixa maior */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+}
+
+/* Seletor de tempo */
+.timer-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+}
+
+.timer-selector label {
+    white-space: nowrap;
+    font-size: 1.2rem;
+}
+
+/* Span com largura fixa */
+#timerValue {
+    width: 2ch; /* largura fixa para 2 caracteres */
+    text-align: center;
+    font-family: monospace; /* garante que ♾️ e números fiquem na mesma largura */
+    display: inline-block;
+    font-size: 1.3rem; /* aumenta o tamanho */
+}
+
+/* Range */
+#timerRange {
+    -webkit-appearance: none;
+    width: 70px;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#timerRange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#timerRange::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+#timerRange::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+#timerRange::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#timerRange::-webkit-slider-thumb {
+    background: var(--thumb-color, var(--btn-velha3));
+}
+
+#timerRange::-moz-range-thumb {
+    background: var(--moz-thumb-color, var(--btn-velha3));
+}
+
+/* Timer fixo (mesma posição e tamanho do seletor) */
+.timer-display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex; /* flex para centralizar horizontal e verticalmente */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem !important; /* Aumentado de 1.6rem para 2.2rem */
+    font-weight: bold;
+    font-family: monospace; /* alinhamento de ♾️ e números */
+}
