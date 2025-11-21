@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Velha³</title>
+    <title>Velha Ultimate</title>
 
     <!-- Ordem correta: variáveis → animações → estilos -->
     <link rel="stylesheet" href="assets/css/variables.css">
@@ -14,11 +14,35 @@
 
 <body class="dark">
 
+    <canvas id="particlesCanvas"></canvas>
+
     <header class="header">
         <!-- Botão do tema -->
         <button id="themeToggle" class="toggle-btn theme-icon"></button>
-        <h1 class="title neon-led">Jogo da Velha³</h1>
+        <h1 class="title neon-led">TicTacThree</h1>
+        <button id="homeBtn" class="toggle-btn home-icon">#</button>
     </header>
+
+    <div id="aboutPopup" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Sobre o TicTacThree:</h2>
+
+            <p>Bem-vindo ao <strong>TicTacThree</strong>, uma coleção de três versões especiais do clássico jogo da
+                velha:</p>
+
+            <ul>
+                <li><strong>Velha #1:</strong> clássica vesão 3×3</li>
+                <li><strong>Velha #2:</strong> variação com tempo e limite de jogadas</li>
+                <li><strong>Velha #3:</strong> modo especial com tabuleiro expandido e regras estratégicas</li>
+            </ul>
+
+            <p>Sinta-se livre para explorar cada modo e desafiar seus amigos!</p>
+
+            <button id="closeAbout" class="btn velha3 close-btn">Entendi</button>
+        </div>
+    </div>
+
+
 
     <div class="main-content">
         <main class="container">

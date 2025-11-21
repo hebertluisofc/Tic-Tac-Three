@@ -15,6 +15,31 @@ body {
     min-height: 100vh;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url("../img/logo.gif");
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px);
+    opacity: 0.10;
+}
+
+/* CANVAS DE PARTÍCULAS */
+#particlesCanvas {
+    position: fixed;
+    inset: 0; 
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+
+
 /* HEADER */
 .header {
     position: fixed;
@@ -29,6 +54,9 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    animation: neonShadow 6s infinite linear;
 }
 
 .header .title {
@@ -54,7 +82,8 @@ body {
 }
 
 .toggle-btn.theme-icon,
-.toggle-btn.help-icon {
+.toggle-btn.help-icon,
+.toggle-btn.home-icon {
     position: relative;
     top: 0;
 }
@@ -101,8 +130,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
-    margin-bottom: 60px;
 }
 
 /* BOTÕES */
@@ -218,13 +245,14 @@ body {
     padding: 15px 0;
     font-size: 0.9rem;
     border-top: 2px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .neon-footer { animation: neonShadow 6s infinite linear; }
 .footer a { animation: neonCycle 6s infinite linear; font-weight: bolder; }
 
 /* BOTÃO DE AJUDA */
-.help-icon { animation: neonBorder 6s infinite linear; font-size: 1.5rem; font-weight: bold; color: var(--neon-1); }
+.help-icon, .home-icon { animation: neonBorder 6s infinite linear; font-size: 1.5rem; font-weight: bold; color: var(--neon-1); }
 
 /* POPUP DE AJUDA */
 .popup-overlay {
@@ -259,7 +287,7 @@ body {
 @media (max-width: 700px) {
     .header { height: 60px; padding: 10px 15px; }
     .toggle-btn.theme-icon,
-    .toggle-btn.help-icon { width: 38px; height: 38px; }
+    .toggle-btn.help-icon, .toggle-btn.home-icon { width: 38px; height: 38px; }
     .header .title { font-size: 2rem; }
     .buttons { width: 200px; }
     .btn { font-size: 1.1rem; }
