@@ -196,7 +196,7 @@ function updateTimerDisplay() {
 
 function endGameByTimeout() {
     running = false;
-    statusText.innerHTML = `Jogador <span class="${currentPlayer === "X" ? "x-turn" : "o-turn"}">${currentPlayer}</span> perdeu por tempo!`;
+    statusText.innerHTML = `Jogador <span class="${currentPlayer === "X" ? "x-turn" : "o-turn"}">${currentPlayer}</span> perdeu!`;
 }
 
 // ========================
