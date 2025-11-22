@@ -1,7 +1,6 @@
 /* ===================================
    assets/js/velha3.js - Jogo da Velha 3 (Ultimate Tic Tac Toe)
-   Versão corrigida: UNDO reverte apenas 1 jogada (limite 4)
-   Alteração: popup de confirmação ao reiniciar partida
+   Versão com popups de confirmação para reinício e home
 =================================== */
 
 /* ========================
@@ -15,10 +14,14 @@ const helpPopup = document.getElementById("helpPopup");
 const closeHelp = document.getElementById("closeHelp");
 const statusText = document.getElementById("gameStatus");
 
-// NOVO: Popup de confirmação
+// Popups de confirmação
 const confirmRestartPopup = document.getElementById("confirmRestartPopup");
 const confirmRestartYes = document.getElementById("confirmRestartYes");
 const confirmRestartNo = document.getElementById("confirmRestartNo");
+
+const confirmHomePopup = document.getElementById("confirmHomePopup");
+const confirmHomeYes = document.getElementById("confirmHomeYes");
+const confirmHomeNo = document.getElementById("confirmHomeNo");
 
 /* ========================
    1. ESTADO DO JOGO
@@ -31,7 +34,7 @@ let bigBoards = [];
 let finishedBoards = Array(9).fill(null);
 
 const stateStack = [];
-const MAX_HISTORY = 4; // Limite de 3 estados salvos para desfazer
+const MAX_HISTORY = 4;
 
 /* ========================
    2. INICIALIZAÇÃO
@@ -40,10 +43,7 @@ function init() {
     createSmallBoards();
     bindUI();
     bindBoardEvents();
-
-    // snapshot inicial (tabuleiro limpo)
     pushSnapshot();
-
     updateUndoButton();
     updateActiveBoard();
 
@@ -84,9 +84,29 @@ function bindUI() {
     closeHelp?.addEventListener("click", () => { if (helpPopup) helpPopup.style.display = "none"; });
     helpPopup?.addEventListener("click", e => { if (e.target === helpPopup) helpPopup.style.display = "none"; });
 
-    if (homeBtn) homeBtn.addEventListener("click", () => window.location.href = "../../index.html");
+    // Home com popup de confirmação
+    homeBtn?.addEventListener("click", () => {
+        if (!running) {
+            window.location.href = "../../index.html";
+        } else if (confirmHomePopup) {
+            confirmHomePopup.style.display = "flex";
+        }
+    });
 
-    // NOVO: botão restart com popup
+    confirmHomeYes?.addEventListener("click", () => {
+        window.location.href = "../../index.html";
+        if (confirmHomePopup) confirmHomePopup.style.display = "none";
+    });
+
+    confirmHomeNo?.addEventListener("click", () => {
+        if (confirmHomePopup) confirmHomePopup.style.display = "none";
+    });
+
+    confirmHomePopup?.addEventListener("click", e => {
+        if (e.target === confirmHomePopup) confirmHomePopup.style.display = "none";
+    });
+
+    // Restart com popup de confirmação
     restartBtn?.addEventListener("click", () => {
         if (!running) {
             restartGame();
@@ -95,7 +115,6 @@ function bindUI() {
         }
     });
 
-    // Popup confirmação
     confirmRestartYes?.addEventListener("click", () => {
         restartGame();
         if (confirmRestartPopup) confirmRestartPopup.style.display = "none";
@@ -135,7 +154,6 @@ function bindUI() {
 
 /* ========================
    5. VITÓRIA NO TABULEIRO PEQUENO
-   Retorna "X", "O" ou null
 ======================== */
 function determineSmallWinner(bigIndex) {
     const board = bigBoards[bigIndex];
@@ -150,7 +168,6 @@ function determineSmallWinner(bigIndex) {
     for (const [a,b,c] of wins) {
         if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) return cells[a];
     }
-
     return null;
 }
 
@@ -173,7 +190,7 @@ function markBigBoardWinner(bigIndex, winner) {
 }
 
 /* ========================
-   7. SALVAR SNAPSHOT
+   7. SNAPSHOT / UNDO
 ======================== */
 function pushSnapshot() {
     const smallCellsState = bigBoards.map(board =>
@@ -193,12 +210,8 @@ function pushSnapshot() {
     updateUndoButton();
 }
 
-/* ========================
-   8. RESTAURAR SNAPSHOT
-======================== */
 function applySnapshot(snapshot) {
     if (!snapshot) return;
-
     snapshot.smallCellsState.forEach((boardState, bigIndex) => {
         const board = bigBoards[bigIndex];
         const cells = Array.from(board.querySelectorAll(".small-cell"));
@@ -213,12 +226,10 @@ function applySnapshot(snapshot) {
     });
 
     finishedBoards = snapshot.finishedBoards.slice();
-
     bigCells.forEach((bigCell, idx) => {
         const overlay = bigCell.querySelector(".winner-overlay");
         if (overlay) overlay.remove();
         bigCell.classList.remove("board-finished", "win");
-
         if (finishedBoards[idx]) {
             const ov = document.createElement("div");
             ov.classList.add("winner-overlay");
@@ -237,9 +248,6 @@ function applySnapshot(snapshot) {
     updateActiveBoard();
 }
 
-/* ========================
-   9. DESFAZER ÚLTIMA JOGADA
-======================== */
 function undoSnapshot() {
     if (stateStack.length <= 1) return;
     stateStack.pop();
@@ -249,11 +257,10 @@ function undoSnapshot() {
 }
 
 /* ========================
-   10. MANIPULADOR DE CLIQUE (pequena célula)
+   10. MANIPULADOR DE CLIQUE CELULAS
 ======================== */
 function handleSmallCellClick(evt) {
     if (!running) return;
-
     const cell = evt.currentTarget;
     const bigIndex = Number(cell.dataset.bigIndex);
     const smallIndex = Number(cell.dataset.index);
@@ -267,11 +274,9 @@ function handleSmallCellClick(evt) {
     cell.style.color = playerWhoPlayed === "X" ? "var(--playerX)" : "var(--playerY)";
 
     const smallWin = determineSmallWinner(bigIndex);
-
     let winner = null;
-    if (smallWin) {
-        winner = smallWin;
-    } else {
+    if (smallWin) winner = smallWin;
+    else {
         const cellsNow = Array.from(bigBoards[bigIndex].querySelectorAll(".small-cell"));
         const full = cellsNow.every(c => c.textContent !== "");
         if (full) winner = playerWhoPlayed === "X" ? "O" : "X";
@@ -286,22 +291,22 @@ function handleSmallCellClick(evt) {
     activeBigIndex = (finishedBoards[nextBoard] !== null) ? null : nextBoard;
 
     currentPlayer = currentPlayer === "X" ? "O" : "X";
-
     pushSnapshot();
     updateActiveBoard();
 }
 
 /* ========================
-   11. BIND EVENTOS NAS PEQUENAS CÉLULAS
+   11. BIND EVENTOS NAS CELULAS
 ======================== */
 function bindBoardEvents() {
     bigBoards.forEach((smallBoard, bigIndex) => {
         const smallCells = smallBoard.querySelectorAll(".small-cell");
         smallCells.forEach(cell => cell.replaceWith(cell.cloneNode(true)));
-        const fresh = smallBoard.querySelectorAll(".small-cell");
 
+        const fresh = smallBoard.querySelectorAll(".small-cell");
         fresh.forEach(cell => {
             cell.addEventListener("click", handleSmallCellClick);
+
             cell.addEventListener("mouseenter", () => {
                 if (!running) return;
                 if (cell.textContent !== "") return;
@@ -313,6 +318,7 @@ function bindBoardEvents() {
                     : "rgba(255,0,255,0.2)";
                 cell.style.transform = "scale(1.05)";
             });
+
             cell.addEventListener("mouseleave", () => {
                 cell.style.background = "rgba(255,255,255,0.1)";
                 cell.style.transform = "scale(1)";
@@ -332,10 +338,7 @@ function checkBigBoardVictory() {
     ];
 
     for (const [a,b,c] of wins) {
-        if (finishedBoards[a] &&
-            finishedBoards[a] === finishedBoards[b] &&
-            finishedBoards[a] === finishedBoards[c]) {
-
+        if (finishedBoards[a] && finishedBoards[a] === finishedBoards[b] && finishedBoards[a] === finishedBoards[c]) {
             const winner = finishedBoards[a];
             clearBigWinHighlights();
             [a,b,c].forEach(i => bigCells[i].classList.add("win"));
@@ -348,8 +351,8 @@ function checkBigBoardVictory() {
 
     const x = finishedBoards.filter(v => v === "X").length;
     const o = finishedBoards.filter(v => v === "O").length;
-    const winner = x > o ? "X" : "O";
 
+    const winner = x > o ? "X" : "O";
     clearBigWinHighlights();
     finishedBoards.forEach((v, i) => { if (v === winner) bigCells[i].classList.add("win"); });
 
