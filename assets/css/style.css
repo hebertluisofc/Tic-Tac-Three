@@ -277,9 +277,8 @@ body::before {
 .popup-content {
     background: var(--bg);
     color: var(--text);
-    padding: 25px 20px;
+    padding: 25px 35px;
     width: 85%;
-    max-width: 320px;
     border-radius: 12px;
     border: 2px solid var(--neon-1);
     animation: fadeIn .3s ease, neonBorder 6s infinite linear;
