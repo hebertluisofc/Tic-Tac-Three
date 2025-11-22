@@ -1,6 +1,7 @@
 /* ===================================
    assets/js/velha3.js - Jogo da Velha 3 (Ultimate Tic Tac Toe)
    Versão corrigida: UNDO reverte apenas 1 jogada (limite 4)
+   Alteração: popup de confirmação ao reiniciar partida
 =================================== */
 
 /* ========================
@@ -13,6 +14,11 @@ const helpBtn = document.getElementById("helpBtn");
 const helpPopup = document.getElementById("helpPopup");
 const closeHelp = document.getElementById("closeHelp");
 const statusText = document.getElementById("gameStatus");
+
+// NOVO: Popup de confirmação
+const confirmRestartPopup = document.getElementById("confirmRestartPopup");
+const confirmRestartYes = document.getElementById("confirmRestartYes");
+const confirmRestartNo = document.getElementById("confirmRestartNo");
 
 /* ========================
    1. ESTADO DO JOGO
@@ -79,7 +85,29 @@ function bindUI() {
     helpPopup?.addEventListener("click", e => { if (e.target === helpPopup) helpPopup.style.display = "none"; });
 
     if (homeBtn) homeBtn.addEventListener("click", () => window.location.href = "../../index.html");
-    if (restartBtn) restartBtn.addEventListener("click", restartGame);
+
+    // NOVO: botão restart com popup
+    restartBtn?.addEventListener("click", () => {
+        if (!running) {
+            restartGame();
+        } else if (confirmRestartPopup) {
+            confirmRestartPopup.style.display = "flex";
+        }
+    });
+
+    // Popup confirmação
+    confirmRestartYes?.addEventListener("click", () => {
+        restartGame();
+        if (confirmRestartPopup) confirmRestartPopup.style.display = "none";
+    });
+
+    confirmRestartNo?.addEventListener("click", () => {
+        if (confirmRestartPopup) confirmRestartPopup.style.display = "none";
+    });
+
+    confirmRestartPopup?.addEventListener("click", e => {
+        if (e.target === confirmRestartPopup) confirmRestartPopup.style.display = "none";
+    });
 
     let undoBtn = document.getElementById("undoBtn");
     if (!undoBtn) {
@@ -102,7 +130,6 @@ function bindUI() {
     if (undoBtn) {
         undoBtn.disabled = true;
         undoBtn.addEventListener("click", undoSnapshot);
-        // efeito visual de fade (CSS assume que .btn pode ficar disabled)
     }
 }
 
@@ -146,8 +173,7 @@ function markBigBoardWinner(bigIndex, winner) {
 }
 
 /* ========================
-   7. SALVAR SNAPSHOT (depois da jogada)
-   Guarda pequeno estado, finishedBoards, jogador atual, flags
+   7. SALVAR SNAPSHOT
 ======================== */
 function pushSnapshot() {
     const smallCellsState = bigBoards.map(board =>
@@ -163,9 +189,7 @@ function pushSnapshot() {
     };
 
     stateStack.push(snapshot);
-
     if (stateStack.length > MAX_HISTORY) stateStack.shift();
-
     updateUndoButton();
 }
 
@@ -215,24 +239,17 @@ function applySnapshot(snapshot) {
 
 /* ========================
    9. DESFAZER ÚLTIMA JOGADA
-   (pop e aplica - mantém sempre pelo menos 1 snapshot inicial)
 ======================== */
 function undoSnapshot() {
     if (stateStack.length <= 1) return;
-
-    // remove o snapshot mais recente (estado *após* a última jogada)
     stateStack.pop();
-
-    // aplica o novo topo (estado imediatamente anterior)
     const previous = stateStack[stateStack.length - 1];
     applySnapshot(previous);
-
     updateUndoButton();
 }
 
 /* ========================
    10. MANIPULADOR DE CLIQUE (pequena célula)
-   Nota: agora grava snapshot APÓS a mutação — garante undo = 1 jogada
 ======================== */
 function handleSmallCellClick(evt) {
     if (!running) return;
@@ -245,12 +262,10 @@ function handleSmallCellClick(evt) {
     if (activeBigIndex !== null && activeBigIndex !== bigIndex) return;
     if (cell.textContent !== "") return;
 
-    // aplica jogada
     const playerWhoPlayed = currentPlayer;
     cell.textContent = playerWhoPlayed;
     cell.style.color = playerWhoPlayed === "X" ? "var(--playerX)" : "var(--playerY)";
 
-    // checa vitória clássica no pequeno
     const smallWin = determineSmallWinner(bigIndex);
 
     let winner = null;
@@ -264,21 +279,15 @@ function handleSmallCellClick(evt) {
 
     if (winner && finishedBoards[bigIndex] === null) {
         markBigBoardWinner(bigIndex, winner);
-        const bigResult = checkBigBoardVictory();
-        // se terminou a partida, gravamos snapshot também (estado final)
-        // mas deixamos o comportamento normal: continuar para pushSnapshot abaixo
+        checkBigBoardVictory();
     }
 
-    // define próximo tabuleiro
     const nextBoard = smallIndex;
     activeBigIndex = (finishedBoards[nextBoard] !== null) ? null : nextBoard;
 
-    // alterna jogador
     currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-    // gravar snapshot do estado resultante dessa jogada (IMPORTANT: depois da mutação)
     pushSnapshot();
-
     updateActiveBoard();
 }
 
@@ -288,14 +297,11 @@ function handleSmallCellClick(evt) {
 function bindBoardEvents() {
     bigBoards.forEach((smallBoard, bigIndex) => {
         const smallCells = smallBoard.querySelectorAll(".small-cell");
-
         smallCells.forEach(cell => cell.replaceWith(cell.cloneNode(true)));
-
         const fresh = smallBoard.querySelectorAll(".small-cell");
 
         fresh.forEach(cell => {
             cell.addEventListener("click", handleSmallCellClick);
-
             cell.addEventListener("mouseenter", () => {
                 if (!running) return;
                 if (cell.textContent !== "") return;
@@ -307,7 +313,6 @@ function bindBoardEvents() {
                     : "rgba(255,0,255,0.2)";
                 cell.style.transform = "scale(1.05)";
             });
-
             cell.addEventListener("mouseleave", () => {
                 cell.style.background = "rgba(255,255,255,0.1)";
                 cell.style.transform = "scale(1)";
@@ -343,7 +348,6 @@ function checkBigBoardVictory() {
 
     const x = finishedBoards.filter(v => v === "X").length;
     const o = finishedBoards.filter(v => v === "O").length;
-
     const winner = x > o ? "X" : "O";
 
     clearBigWinHighlights();
