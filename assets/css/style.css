@@ -1,8 +1,9 @@
 /* ===================================
-   assets/css/style.css - Estilos principais para TicTacThree (corrigido scroll)
+   assets/css/style.css - TicTacThree
+   Refatorado, organizado e otimizado
 =================================== */
 
-/* RESET E BASE */
+/* RESET & BASE */
 * {
     margin: 0;
     padding: 0;
@@ -24,14 +25,11 @@ body {
     color: var(--text);
 }
 
-/* BACKGROUND PSEUDO-ELEMENTO */
+/* BACKGROUND BLUR */
 body::before {
     content: "";
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
+    inset: 0;
     z-index: -1;
     background-image: url("../img/logo.gif");
     background-size: cover;
@@ -40,11 +38,10 @@ body::before {
     opacity: 0.10;
 }
 
-/* CANVAS DE PARTÍCULAS */
+/* PARTICLE CANVAS */
 #particlesCanvas {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100vh;
     z-index: -2;
@@ -59,26 +56,26 @@ body::before {
     left: 0;
     width: 100%;
     height: 70px;
-    z-index: 1000;
-    background: var(--bg);
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    border-top: 2px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg);
+    z-index: 1000;
+    border-top: 2px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     animation: neonShadow 6s infinite linear;
 }
 
 .header .title {
+    flex: 1;
     font-size: 4rem;
-    margin: 0;
     text-align: center;
     white-space: nowrap;
-    flex: 1;
 }
 
+/* ICON BUTTONS */
 .toggle-btn {
     width: 42px;
     height: 42px;
@@ -93,14 +90,13 @@ body::before {
     animation: neonBorder 6s infinite linear;
 }
 
+.toggle-btn:hover { transform: scale(1.1); }
+
+/* THEME ICONS */
 .toggle-btn.theme-icon,
 .toggle-btn.help-icon,
 .toggle-btn.home-icon {
     position: relative;
-}
-
-.toggle-btn:hover {
-    transform: scale(1.1);
 }
 
 .theme-icon::before {
@@ -119,19 +115,10 @@ body::before {
     transform: rotate(-180deg);
 }
 
-/* CONTAINER E TÍTULO */
-.container {
-    text-align: center;
-    animation: fadeIn 1.2s ease-in-out;
-}
-
-.title {
-    font-size: 3rem;
-}
-
-.neon-led {
-    animation: neonCycle 6s infinite linear;
-}
+/* MAIN CONTAINER */
+.container { text-align: center; animation: fadeIn 1.2s ease-in-out; }
+.title { font-size: 3rem; }
+.neon-led { animation: neonCycle 6s infinite linear; }
 
 /* MAIN CONTENT */
 .main-content {
@@ -142,12 +129,12 @@ body::before {
     align-items: center;
 }
 
-/* BOTÕES */
+/* BUTTONS */
 .buttons {
+    width: 260px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 260px;
 }
 
 .btn {
@@ -155,12 +142,13 @@ body::before {
     font-size: 1.3rem;
     border-radius: 10px;
     cursor: pointer;
-    transition: .3s;
-    letter-spacing: 2px;
     background: transparent;
     border: 2px solid;
+    letter-spacing: 2px;
+    transition: .3s;
 }
 
+/* BUTTON COLORS */
 .velha1 { border-color: var(--btn-velha1); color: var(--btn-velha1); }
 .velha1:hover { background: var(--btn-velha1); color: #000; transform: scale(1.08); box-shadow: 0 0 15px var(--btn-velha1); }
 
@@ -172,16 +160,16 @@ body::before {
 
 .win { animation: winGlow 0.6s ease-in-out infinite; border-width: 3px; }
 
-/* JOGO DA VELHA */
+/* GAME AREA */
 .game-container { text-align: center; animation: fadeIn 1.2s ease-in-out; }
 
 .board {
     width: 300px;
     height: 300px;
-    margin: 0 auto 30px auto;
+    margin: 0 auto 30px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
     gap: 8px;
 }
 
@@ -189,8 +177,8 @@ body::before {
     font-size: 1.4rem;
     margin-bottom: 20px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     gap: 15px;
 }
 
@@ -200,29 +188,27 @@ body::before {
     color: var(--text);
 }
 
+/* CELLS */
 .cell {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.05);
     border: 2px solid var(--neon-1);
+    border-radius: 10px;
     font-size: 2.2rem;
     font-weight: bold;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     cursor: pointer;
-    transition: color .3s;
-    border-radius: 10px;
-    width: 100%;
-    height: 100%;
     min-width: 80px;
     min-height: 80px;
+    transition: color .3s;
 }
 
-.selected {
-    animation: neonPulse 0.8s infinite alternate;
-}
+.selected { animation: neonPulse 0.8s infinite alternate; }
 
 .board.board-neutral .cell { border-color: var(--neon-1); animation: neonBorder 6s infinite linear; }
 
+/* PLAYER COLORS */
 .x-turn { color: var(--playerX); }
 .o-turn { color: var(--playerY); }
 
@@ -232,7 +218,7 @@ body::before {
 .cell.x.win { border-color: var(--playerX) !important; }
 .cell.o.win { border-color: var(--playerY) !important; }
 
-.cell.filled { transform: none; }
+/* BOARD COLORS */
 .board.board-x .cell { border-color: var(--playerX); }
 .board.board-o .cell { border-color: var(--playerY); }
 
@@ -247,62 +233,99 @@ body::before {
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    padding: 15px 0;
     background: var(--footer-bg);
     text-align: center;
-    padding: 15px 0;
     font-size: 0.9rem;
-    border-top: 2px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    border-top: 2px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid rgba(255,255,255,0.1);
 }
 
+.footer a { font-weight: bolder; animation: neonCycle 6s infinite linear; }
 .neon-footer { animation: neonShadow 6s infinite linear; }
-.footer a { animation: neonCycle 6s infinite linear; font-weight: bolder; }
 
-/* BOTÃO DE AJUDA */
-.help-icon, .home-icon { animation: neonBorder 6s infinite linear; font-size: 1.5rem; font-weight: bold; color: var(--neon-1); }
+/* HELP & HOME ICONS */
+.help-icon, .home-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--neon-1);
+    animation: neonBorder 6s infinite linear;
+}
 
-/* POPUP DE AJUDA */
+/* ===============================
+   POPUP (CENTRALIZADO)
+=============================== */
+
 .popup-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
     display: none;
     align-items: center;
     justify-content: center;
+    background: rgba(0,0,0,0.65);
     backdrop-filter: blur(3px);
     z-index: 9999;
 }
 
+/* Centraliza tudo, mas mantém texto alinhado à esquerda */
 .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     background: var(--bg);
     color: var(--text);
-    padding: 25px 35px;
+    padding: 25px;
     width: 85%;
     border-radius: 12px;
     border: 2px solid var(--neon-1);
-    animation: fadeIn .3s ease, neonBorder 6s infinite linear;
-    text-align: left;
     box-shadow: 0 0 12px var(--neon-1);
+    text-align: left;
+    animation: fadeIn .3s ease, neonBorder 6s infinite linear;
 }
 
-.popup-content h2 { margin-bottom: 10px; font-size: 1.2rem; }
-.popup-content ul { margin: 10px 0; padding-left: 18px; font-size: 1rem; line-height: 1.4; text-align: left; }
-.close-btn { margin-top: 15px; width: 100%; padding: 10px; font-size: 1.1rem; }
+/* Textos continuam alinhados à esquerda */
+.popup-content h2,
+.popup-content ul {
+    align-self: stretch;
+    text-align: left;
+}
 
-/* Limitar altura e permitir scroll no popup de ajuda */
+.popup-content h2 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.popup-content ul {
+    margin: 10px 0;
+    padding-left: 18px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.close-btn {
+    margin-top: 15px;
+    margin-left: -15px;
+    width: 95%;
+    padding: 10px;
+    font-size: 1.1rem;
+}
+
+/* SCROLL CONTROL */
 #helpPopup .popup-content {
-    max-height: 80vh;       /* limite relativo à tela */
-    overflow-y: auto;       /* ativa o scroll somente quando precisar */
-    padding-right: 12px;    /* evita que o scroll cubra o texto */
-    box-sizing: border-box; /* garante que padding não aumente a altura */
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 12px;
+    box-sizing: border-box;
 }
 
-/* RESPONSIVO */
+/* RESPONSIVE */
 @media (max-width: 700px) {
     .header { height: 60px; padding: 10px 15px; }
     .toggle-btn.theme-icon,
-    .toggle-btn.help-icon, .toggle-btn.home-icon { width: 38px; height: 38px; }
+    .toggle-btn.help-icon,
+    .toggle-btn.home-icon { width: 38px; height: 38px; }
     .header .title { font-size: 2rem; }
     .buttons { width: 200px; }
     .btn { font-size: 1.1rem; }
