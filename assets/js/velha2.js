@@ -36,9 +36,9 @@ let timeRemaining = timeLimit;
 let timerActive = false;
 
 const winPatterns = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
 ];
 
 // Thumb colors
@@ -48,7 +48,7 @@ const thumbColors = {
     3: "#ffb300",
     4: "#fdd77d",
     5: "#00ffa6",
-    6: "#00eaff"  
+    6: "#00eaff"
 };
 
 /* ========================
@@ -60,7 +60,7 @@ homeBtn.addEventListener("click", () => window.location.href = "../../index.html
 
 helpBtn.addEventListener("click", () => helpPopup.style.display = "flex");
 closeHelp.addEventListener("click", () => helpPopup.style.display = "none");
-helpPopup.addEventListener("click", e => { if(e.target===helpPopup) helpPopup.style.display="none"; });
+helpPopup.addEventListener("click", e => { if (e.target === helpPopup) helpPopup.style.display = "none"; });
 
 // Slider
 timerRange.addEventListener("input", () => {
@@ -155,7 +155,7 @@ function movePiece(fromIndex, toIndex) {
     cells[toIndex].classList.add("filled", currentPlayer === "X" ? "x" : "o");
 
     cells[fromIndex].textContent = "";
-    cells[fromIndex].classList.remove("filled","x","o","win","selected");
+    cells[fromIndex].classList.remove("filled", "x", "o", "win", "selected");
 
     if (!checkWinner(currentPlayer)) {
         changePlayer();
@@ -172,6 +172,14 @@ function updateStatus() {
     if (!running) return;
     const colorClass = currentPlayer === "X" ? "x-turn" : "o-turn";
     statusText.innerHTML = `Vez do jogador: <span class="${colorClass}">${currentPlayer}</span>`;
+
+    // Atualiza bordas das células conforme jogador da vez
+    cells.forEach(c => {
+        c.style.borderColor = currentPlayer === "X"
+            ? "var(--playerX)"
+            : "var(--playerY)";
+    });
+
 }
 
 function changePlayer() {
@@ -197,7 +205,7 @@ function updateThumbColor(value) {
    7. TIMER
 ======================== */
 function startTimer() {
-    if(timeLimit === Infinity) {
+    if (timeLimit === Infinity) {
         timerDisplay.textContent = "⏳ ♾️";
         return;
     }
@@ -208,7 +216,7 @@ function startTimer() {
 
     timer = setInterval(() => {
         timeRemaining -= 0.01;
-        if(timeRemaining <= 0) {
+        if (timeRemaining <= 0) {
             clearInterval(timer);
             timeRemaining = 0;
             updateTimerDisplay();
@@ -255,22 +263,22 @@ function checkWinner(player) {
     let winningPattern = null;
 
     for (const p of winPatterns) {
-        const [a,b,c] = p;
-        if(board[a] && board[a] === board[b] && board[a] === board[c]){
+        const [a, b, c] = p;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             winningPattern = p;
             break;
         }
     }
 
-    if(winningPattern){
+    if (winningPattern) {
         running = false;
         const colorClass = player === "X" ? "x-turn" : "o-turn";
         statusText.innerHTML = `Jogador <span class="${colorClass}">${player}</span> venceu!`;
 
-        winningPattern.forEach(i=>{
+        winningPattern.forEach(i => {
             cells[i].classList.add("win");
-            cells[i].classList.remove("x","o");
-            cells[i].classList.add(player==="X"?"x":"o");
+            cells[i].classList.remove("x", "o");
+            cells[i].classList.add(player === "X" ? "x" : "o");
         });
 
         stopTimer();
@@ -285,29 +293,29 @@ function checkWinner(player) {
 ======================== */
 function endGameByTimeout() {
     running = false;
-    const colorClass = currentPlayer==="X"?"x-turn":"o-turn";
+    const colorClass = currentPlayer === "X" ? "x-turn" : "o-turn";
     statusText.innerHTML = `Jogador <span class="${colorClass}">${currentPlayer}</span> perdeu!`;
 }
 
 /* ========================
    10. REINICIAR JOGO
 ======================== */
-function restartGame(){
+function restartGame() {
     board.fill("");
     currentPlayer = "X";
     running = true;
 
-    playerMoves = { X:0, O:0 };
+    playerMoves = { X: 0, O: 0 };
     selectedPiece = null;
 
-    cells.forEach(c=>{
-        c.textContent="";
-        c.classList.remove("filled","x","o","win","selected");
+    cells.forEach(c => {
+        c.textContent = "";
+        c.classList.remove("filled", "x", "o", "win", "selected");
     });
 
     // Reseta timer e seletor
-    timerDisplay.style.display="none";
-    timerSelectorContainer.style.display="flex";
+    timerDisplay.style.display = "none";
+    timerSelectorContainer.style.display = "flex";
     timerActive = false;
     timeLimit = parseInt(timerRange.value);
     timeRemaining = timeLimit;
