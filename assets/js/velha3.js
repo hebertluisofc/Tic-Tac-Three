@@ -43,7 +43,7 @@ bigCells.forEach((bigCell, bigIndex) => {
         const smallCell = document.createElement("div");
         smallCell.classList.add("small-cell");
 
-        smallCell.dataset.index = i;      // índice da célula no tabuleiro pequeno
+        smallCell.dataset.index = i;      // índice da célula no tabuleiro menor
         smallCell.dataset.bigIndex = bigIndex; // índice do tabuleiro grande
 
         smallBoard.appendChild(smallCell);
@@ -60,14 +60,19 @@ let running = true;
 let activeBigIndex = null; // null = qualquer tabuleiro no início
 const bigBoards = Array.from(bigCells).map(cell => cell.querySelector(".small-board"));
 
+// Controle de tabuleiros finalizados
+// null = jogável | "X" ou "O" = vencedor | "D" = velha
+let finishedBoards = Array(9).fill(null);
+
 /* ========================
-   5. FUNÇÃO DE DESTAQUE DO TABULEIRO ATIVO
+   5. DESTAQUE DO TABULEIRO ATIVO
 ======================== */
 function updateActiveBoard() {
     bigCells.forEach((bigCell, index) => {
         bigCell.classList.remove("active-board-x", "active-board-o");
 
         if (!running) return;
+        if (finishedBoards[index] !== null) return; // tabuleiro já finalizado não pisca
 
         if (activeBigIndex === null || activeBigIndex === index) {
             bigCell.classList.add(currentPlayer === "X" ? "active-board-x" : "active-board-o");
@@ -80,7 +85,48 @@ function updateActiveBoard() {
 }
 
 /* ========================
-   6. EVENTOS DE CLIQUE NAS CÉLULAS
+   6. VERIFICAÇÃO DE VITÓRIA DO TABULEIRO MENOR
+======================== */
+function checkSmallBoardWinner(bigIndex) {
+    const board = bigBoards[bigIndex];
+    const cells = Array.from(board.querySelectorAll(".small-cell"))
+        .map(c => c.textContent);
+
+    const wins = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ];
+
+    for (const [a, b, c] of wins) {
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+            return cells[a]; // "X" ou "O"
+        }
+    }
+
+    if (cells.every(v => v !== "")) {
+        return "D"; // velha
+    }
+
+    return null; // jogo continua
+}
+
+/* ========================
+   6b. MARCAR TABULEIRO GRANDE COM OVERLAY
+======================== */
+function markBigBoard(bigCell, winner) {
+    if (bigCell.querySelector(".winner-overlay")) return;
+
+    const overlay = document.createElement("div");
+    overlay.classList.add("winner-overlay");
+    overlay.textContent = winner;
+
+    bigCell.appendChild(overlay);
+    bigCell.classList.add("board-finished");
+}
+
+/* ========================
+   7. EVENTOS DE CLIQUE NAS CÉLULAS
 ======================== */
 bigBoards.forEach((smallBoard, bigIndex) => {
     const smallCells = smallBoard.querySelectorAll(".small-cell");
@@ -89,22 +135,44 @@ bigBoards.forEach((smallBoard, bigIndex) => {
         cell.addEventListener("click", () => {
             if (!running) return;
 
+            if (finishedBoards[bigIndex] !== null) return; // tabuleiro já finalizado
             if (activeBigIndex !== null && activeBigIndex !== bigIndex) return;
             if (cell.textContent !== "") return;
 
             cell.textContent = currentPlayer;
             cell.style.color = currentPlayer === "X" ? "var(--playerX)" : "var(--playerY)";
 
-            activeBigIndex = parseInt(cell.dataset.index);
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            // Verifica vitória no tabuleiro menor
+            const result = checkSmallBoardWinner(bigIndex);
 
+            if (result && finishedBoards[bigIndex] === null) {
+                finishedBoards[bigIndex] = result;
+
+                const winner =
+                    result === "D"
+                        ? (currentPlayer === "X" ? "O" : "X") // velha → penúltimo jogador
+                        : result;
+
+                markBigBoard(bigCells[bigIndex], winner);
+            }
+
+            // Próximo tabuleiro
+            const nextBoard = parseInt(cell.dataset.index);
+
+            if (finishedBoards[nextBoard] !== null) {
+                activeBigIndex = null; // livre para jogar em qualquer tabuleiro ativo
+            } else {
+                activeBigIndex = nextBoard;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
             updateActiveBoard();
         });
     });
 });
 
 /* ========================
-   6b. HOVER DINÂMICO PARA CÉLULAS PEQUENAS
+   6c. HOVER DINÂMICO
 ======================== */
 bigBoards.forEach((smallBoard, bigIndex) => {
     const smallCells = smallBoard.querySelectorAll(".small-cell");
@@ -112,29 +180,30 @@ bigBoards.forEach((smallBoard, bigIndex) => {
     smallCells.forEach(cell => {
         cell.addEventListener("mouseenter", () => {
             if (!running) return;
-            if (cell.textContent !== "") return; // não altera hover se célula preenchida
-            if (activeBigIndex !== null && activeBigIndex !== bigIndex) return; // só hover se tabuleiro ativo
+            if (cell.textContent !== "") return;
+            if (finishedBoards[bigIndex] !== null) return;
+            if (activeBigIndex !== null && activeBigIndex !== bigIndex) return;
 
-            // Aplica cor do jogador da vez
-            cell.style.background = currentPlayer === "X" 
-                ? "rgba(0, 255, 255, 0.2)"   // mesma cor do X
-                : "rgba(255, 0, 255, 0.2)"; // mesma cor do O
+            cell.style.background =
+                currentPlayer === "X"
+                    ? "rgba(0, 255, 255, 0.2)"
+                    : "rgba(255, 0, 255, 0.2)";
+
             cell.style.transform = "scale(1.05)";
         });
 
         cell.addEventListener("mouseleave", () => {
-            cell.style.background = "rgba(255, 255, 255, 0.1)"; // cor padrão
+            cell.style.background = "rgba(255, 255, 255, 0.1)";
             cell.style.transform = "scale(1)";
         });
     });
 });
 
-
 /* ========================
    7. FUNÇÃO DE REINICIAR
 ======================== */
 function restartGame() {
-    // 🔹 1. Limpa todas as células pequenas
+    // Limpa células
     bigBoards.forEach(smallBoard => {
         smallBoard.querySelectorAll(".small-cell").forEach(cell => {
             cell.textContent = "";
@@ -142,20 +211,24 @@ function restartGame() {
         });
     });
 
-    // 🔹 2. Remove animações das células grandes
-    bigCells.forEach(cell => {
-        cell.classList.remove("active-board-x", "active-board-o");
+    // Remove overlays
+    bigCells.forEach(c => {
+        c.classList.remove("board-finished");
+        const overlay = c.querySelector(".winner-overlay");
+        if (overlay) overlay.remove();
+
+        // Reset de animação neon
+        c.style.animation = "none";
+        void c.offsetWidth;
+        c.style.animation = "";
     });
 
-    // 🔹 3. Força reflow (faz o navegador “perceber” a mudança)
-    void document.body.offsetHeight;
-
-    // 🔹 4. Reseta variáveis do jogo
+    // Resetar variáveis
     currentPlayer = "X";
     running = true;
     activeBigIndex = null;
+    finishedBoards = Array(9).fill(null);
 
-    // 🔹 5. Reaplica animações normalmente
     updateActiveBoard();
 }
 

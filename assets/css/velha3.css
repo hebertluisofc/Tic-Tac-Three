@@ -65,3 +65,21 @@
     border-color: var(--playerY) !important;
 }
 
+.board-finished {
+    position: relative;
+    opacity: 0.4; /* tabuleiro menor mais fraco */
+}
+
+.winner-overlay {
+    position: absolute;
+    inset: 0;
+    font-size: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    pointer-events: none;
+    color: white;
+    text-shadow: 0 0 15px currentColor;
+}
+
