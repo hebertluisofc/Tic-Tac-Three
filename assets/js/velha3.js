@@ -1,6 +1,6 @@
 /* ===================================
    assets/js/velha3.js - Jogo da Velha 3 (Ultimate Tic Tac Toe)
-   Versão atualizada — retorna somente "X", "O" ou null para tabuleiros menores
+   Versão atualizada — regras completas do jogo
 =================================== */
 
 /* ========================
@@ -87,32 +87,29 @@ function updateActiveBoard() {
 
 /* ========================
    6. VERIFICAÇÃO DE VITÓRIA DO TABULEIRO MENOR
-   -> Retorna "X", "O" ou null (NUNCA retorna "D")
+   -> Retorna "X", "O" ou null
 ======================== */
 function checkSmallBoardWinner(bigIndex) {
     const board = bigBoards[bigIndex];
     const cells = Array.from(board.querySelectorAll(".small-cell")).map(c => c.textContent);
 
     const wins = [
-        [0,1,2], [3,4,5], [6,7,8],
-        [0,3,6], [1,4,7], [2,5,8],
-        [0,4,8], [2,4,6]
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
     ];
 
-    for (const [a,b,c] of wins) {
+    for (const [a, b, c] of wins) {
         if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-            return cells[a]; // "X" ou "O"
+            return cells[a];
         }
     }
 
-    // Se o tabuleiro estiver cheio e não houver linha vencedora,
-    // retornamos null aqui — a regra de 'penúltimo vence' será aplicada
-    // no manipulador de clique (para preservar quem foi o último a jogar).
-    return null;
+    return null; // tabuleiro cheio será tratado no clique
 }
 
 /* ========================
-   7. MARCAR TABULEIRO GRANDE COM OVERLAY (símbolo grande)
+   7. MARCAR TABULEIRO GRANDE COM OVERLAY
 ======================== */
 function markBigBoard(bigCell, winner) {
     if (!bigCell || bigCell.querySelector(".winner-overlay")) return;
@@ -121,17 +118,63 @@ function markBigBoard(bigCell, winner) {
     overlay.classList.add("winner-overlay");
     overlay.textContent = winner;
 
-    // Cor do símbolo grande (sólida)
     overlay.style.color = winner === "X" ? "var(--playerX)" : "var(--playerY)";
 
     bigCell.appendChild(overlay);
     bigCell.classList.add("board-finished");
-
-    // garantir que small-board fique translúcido (CSS controla .board-finished .small-board)
 }
 
 /* ========================
-   8. CLIQUE NAS CÉLULAS (LÓGICA DE JOGADA)
+   8. VERIFICAÇÃO DE VITÓRIA DO TABULEIRO GRANDE
+======================== */
+function checkBigBoardVictory() {
+    const wins = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+    ];
+
+    // 1) Vitória clássica
+    for (const [a, b, c] of wins) {
+        if (
+            finishedBoards[a] &&
+            finishedBoards[a] === finishedBoards[b] &&
+            finishedBoards[a] === finishedBoards[c]
+        ) {
+            endGame(finishedBoards[a]);
+            return;
+        }
+    }
+
+    // 2) A partida continua se houver tabuleiro não finalizado
+    if (finishedBoards.includes(null)) return;
+
+    // 3) Todos os tabuleiros resolvidos → placar decide
+    const countX = finishedBoards.filter(v => v === "X").length;
+    const countO = finishedBoards.filter(v => v === "O").length;
+
+    if (countX > countO) {
+        endGame("X");
+    } else {
+        endGame("O");
+    }
+}
+
+/* ========================
+   9. FINALIZAR PARTIDA
+======================== */
+function endGame(player) {
+    running = false;
+
+    bigCells.forEach(c => c.classList.remove("active-board-x", "active-board-o"));
+
+    if (statusText) {
+        statusText.innerHTML = `<span class="${player === "X" ? "x-turn" : "o-turn"}">${player}</span> venceu a partida!`;
+    }
+}
+
+/* ========================
+   10. CLIQUE NAS CÉLULAS (LÓGICA)
 ======================== */
 bigBoards.forEach((smallBoard, bigIndex) => {
     const smallCells = smallBoard.querySelectorAll(".small-cell");
@@ -140,68 +183,47 @@ bigBoards.forEach((smallBoard, bigIndex) => {
         cell.addEventListener("click", () => {
             if (!running) return;
 
-            // se tabuleiro já finalizado, bloqueia
             if (finishedBoards[bigIndex] !== null) return;
-
-            // se existe um tabuleiro ativo diferente deste, bloqueia
             if (activeBigIndex !== null && activeBigIndex !== bigIndex) return;
-
-            // se célula já preenchida, bloqueia
             if (cell.textContent !== "") return;
 
-            // jogador atual faz a jogada
             const playerWhoPlayed = currentPlayer;
             cell.textContent = playerWhoPlayed;
             cell.style.color = playerWhoPlayed === "X" ? "var(--playerX)" : "var(--playerY)";
 
-            // 1) verifica vitória "clássica" no pequeno
+            // --- Verificar vitória no pequeno ---
             const winResult = checkSmallBoardWinner(bigIndex);
-
-            // 2) determina vencedor do pequeno:
-            // - se winResult é "X" ou "O", ele é o vencedor
-            // - senão, se o tabuleiro ficou cheio após a jogada, o vencedor é o PENÚLTIMO jogador
             let winner = null;
 
-            if (winResult === "X" || winResult === "O") {
+            if (winResult) {
                 winner = winResult;
             } else {
-                // checa se ficou cheio
-                const smallCellsNow = Array.from(bigBoards[bigIndex].querySelectorAll(".small-cell"));
-                const isFull = smallCellsNow.every(c => c.textContent !== "");
-
+                const isFull = Array.from(bigBoards[bigIndex].querySelectorAll(".small-cell"))
+                    .every(c => c.textContent !== "");
                 if (isFull) {
-                    // penúltimo jogador vence (quem jogou antes do 'playerWhoPlayed')
                     winner = playerWhoPlayed === "X" ? "O" : "X";
                 }
             }
 
-            // se houver vencedor para o tabuleiro menor, marca e bloqueia
             if (winner && finishedBoards[bigIndex] === null) {
                 finishedBoards[bigIndex] = winner;
                 markBigBoard(bigCells[bigIndex], winner);
+                checkBigBoardVictory(); // <<< IMPORTANTE
             }
 
-            // define próximo tabuleiro ativo: a posição (index) da célula jogada
+            // Próximo tabuleiro
             const nextBoard = parseInt(cell.dataset.index);
+            activeBigIndex = finishedBoards[nextBoard] !== null ? null : nextBoard;
 
-            // se o próximo já estiver finalizado, libera escolha (null)
-            if (finishedBoards[nextBoard] !== null) {
-                activeBigIndex = null;
-            } else {
-                activeBigIndex = nextBoard;
-            }
-
-            // alterna jogador
             currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-            // atualiza destaque
             updateActiveBoard();
         });
     });
 });
 
 /* ========================
-   9. HOVER DINÂMICO (APENAS TABULEIRO ATIVO E NÃO FINALIZADO)
+   11. HOVER DINÂMICO
 ======================== */
 bigBoards.forEach((smallBoard, bigIndex) => {
     const smallCells = smallBoard.querySelectorAll(".small-cell");
@@ -227,32 +249,28 @@ bigBoards.forEach((smallBoard, bigIndex) => {
 });
 
 /* ========================
-   10. REINICIAR PARTIDA
+   12. REINICIAR
 ======================== */
 function restartGame() {
-    // limpa células pequenas
     bigBoards.forEach(smallBoard => {
         smallBoard.querySelectorAll(".small-cell").forEach(cell => {
             cell.textContent = "";
             cell.style.color = "";
-            cell.style.background = ""; // restaura background padrao via CSS
+            cell.style.background = "";
             cell.style.transform = "";
         });
     });
 
-    // remove overlays e estado finalizado dos tabuleiros grandes
     bigCells.forEach(c => {
         c.classList.remove("board-finished");
         const overlay = c.querySelector(".winner-overlay");
         if (overlay) overlay.remove();
 
-        // forçar restart da animação neon aplicável (.active-board-x / o)
         c.style.animation = "none";
-        void c.offsetWidth; // reflow
+        void c.offsetWidth;
         c.style.animation = "";
     });
 
-    // reset variáveis
     currentPlayer = "X";
     running = true;
     activeBigIndex = null;
@@ -262,7 +280,7 @@ function restartGame() {
 }
 
 /* ========================
-   11. INICIALIZAÇÃO
+   13. INICIALIZAÇÃO
 ======================== */
 window.addEventListener("load", () => {
     updateActiveBoard();
