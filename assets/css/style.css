@@ -272,7 +272,7 @@ body::before {
 }
 
 /* ===============================
-   POPUP (CENTRALIZADO)
+   POPUP CENTRALIZADO COM SCROLL MODERNO
 =============================== */
 
 .popup-overlay {
@@ -286,12 +286,10 @@ body::before {
     z-index: 9999;
 }
 
-/* Centraliza tudo, mas mantém texto alinhado à esquerda */
 .popup-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     background: var(--bg);
     color: var(--text);
     padding: 25px;
@@ -301,9 +299,49 @@ body::before {
     box-shadow: 0 0 12px var(--neon-1);
     text-align: left;
     animation: fadeIn .3s ease, neonBorder 6s infinite linear;
+
+    max-height: 80vh;
+    /* overflow removido daqui, será no wrapper interno */
 }
 
-/* Textos continuam alinhados à esquerda */
+/* WRAPPER INTERNO PARA O SCROLL */
+.popup-scroll-wrapper {
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 12px; /* garante espaço entre conteúdo e scrollbar */
+    box-sizing: content-box; /* padding não reduz o espaço do conteúdo */
+}
+
+/* Custom scrollbar moderno */
+.popup-scroll-wrapper::-webkit-scrollbar {
+    width: 10px;             
+    border-radius: 5px;
+}
+
+.popup-scroll-wrapper::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05); 
+    border-radius: 5px;
+}
+
+.popup-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--neon-1);          
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.popup-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-2);          
+}
+
+/* Firefox */
+.popup-scroll-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--neon-1) rgba(255,255,255,0.05);
+}
+
+/* Textos ainda alinhados à esquerda */
 .popup-content h2,
 .popup-content ul {
     align-self: stretch;
@@ -324,18 +362,9 @@ body::before {
 
 .close-btn {
     margin-top: 15px;
-    margin-left: -15px;
     width: 95%;
     padding: 10px;
     font-size: 1.1rem;
-}
-
-/* SCROLL CONTROL */
-#helpPopup .popup-content {
-    max-height: 80vh;
-    overflow-y: auto;
-    padding-right: 12px;
-    box-sizing: border-box;
 }
 
 /* RESPONSIVE */
