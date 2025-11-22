@@ -134,20 +134,28 @@ bigBoards.forEach((smallBoard, bigIndex) => {
    7. FUNÇÃO DE REINICIAR
 ======================== */
 function restartGame() {
-    // Limpa todas as células pequenas
+    // 🔹 1. Limpa todas as células pequenas
     bigBoards.forEach(smallBoard => {
         smallBoard.querySelectorAll(".small-cell").forEach(cell => {
             cell.textContent = "";
-            cell.style.color = ""; // remove cor do jogador
+            cell.style.color = "";
         });
     });
 
-    // Reseta variáveis do jogo
+    // 🔹 2. Remove animações das células grandes
+    bigCells.forEach(cell => {
+        cell.classList.remove("active-board-x", "active-board-o");
+    });
+
+    // 🔹 3. Força reflow (faz o navegador “perceber” a mudança)
+    void document.body.offsetHeight;
+
+    // 🔹 4. Reseta variáveis do jogo
     currentPlayer = "X";
     running = true;
-    activeBigIndex = null; // qualquer tabuleiro ativo no início
+    activeBigIndex = null;
 
-    // Atualiza bordas e status
+    // 🔹 5. Reaplica animações normalmente
     updateActiveBoard();
 }
 
