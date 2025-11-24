@@ -2,95 +2,100 @@
    assets/css/velha3.css - Estilos específicos para o jogo da velha 3
 =================================== */
 
+/* BOARD PRINCIPAL RESPONSIVO */
 .board {
-    width: 300px;
-    height: 300px;
+    width: min(80vmin, 500px);
+    height: min(80vmin, 500px);
     margin: 0 auto 30px auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 8px;
+    gap: 1.6vmin;
 }
 
+/* CÉLULA GRANDE (que contém um small-board ou um símbolo final) */
 .cell {
     background: rgba(255, 255, 255, 0.05);
-    font-size: 2.2rem;
+    border-radius: 12px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    padding: 4px;
+
+    /* Ajuste dinâmico */
+    font-size: 9vmin;
+    padding: 7px;
+    transition: border-color 0.3s, transform 0.3s;
     border: none;
+    position: relative;
 }
 
-/* Tabuleiro pequeno dentro de cada célula do grande */
+/* TABULEIRO PEQUENO (Responsivo dentro do big board) */
 .small-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 3px;
+
     width: 100%;
     height: 100%;
+    gap: 0.8vmin; /* proporcional */
 }
 
+/* MINI CÉLULA RESPONSIVA */
 .small-cell {
     background: rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
-    font-weight: bold;
     cursor: pointer;
     border-radius: 6px;
     transition: background 0.2s, transform 0.2s;
+
+    /* Dinâmico: proporcional ao tamanho do tabuleiro */
+    font-size: 3.2vmin;
+    font-weight: bold;
 }
 
-/* Bordas neon padrão dos tabuleiros grandes */
-.cell {
-    transition: border-color 0.3s;
-}
-
-/* Tabuleiro ativo do jogador X */
+/* EFEITOS DE BORDAS NEON */
 .active-board-x {
     animation: neonShadow 6s infinite linear;
-    border: 3px solid;
-    border-color: var(--playerX) !important;
+    border: 3px solid var(--playerX) !important;
 }
 
-/* Tabuleiro ativo do jogador O */
 .active-board-o {
     animation: neonShadow 6s infinite linear;
-    border: 3px solid;
-    border-color: var(--playerY) !important;
+    border: 3px solid var(--playerY) !important;
 }
 
-/* --- Remover a transparência do big cell inteiro --- */
+/* FINALIZAÇÃO DO MINI TABULEIRO */
 .board-finished {
     position: relative;
 }
 
-/* --- Aplicar a transparência APENAS no tabuleiro menor --- */
 .board-finished .small-board {
     opacity: 0.35;
 }
 
-/* --- Overlay sempre 100% opaco e colorido --- */
+/* OVERLAY DE VITÓRIA */
 .winner-overlay {
     position: absolute;
     inset: 0;
-    font-size: 4.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    pointer-events: none;
 
-    opacity: 1; /* garantir que fique sólido */
-    color: white; /* cor padrão, será sobrescrita via JS */
+    pointer-events: none;
+    font-weight: bold;
+
+    /* Responsivo */
+    font-size: 10vmin;
+
+    color: white; 
     text-shadow: 0 0 18px currentColor;
+    opacity: 1;
 }
 
+/* BOTÃO DE DESFAZER */
 #undoBtn {
     transition: opacity 0.4s ease, transform 0.4s ease;
     opacity: 1;
@@ -101,4 +106,93 @@
     opacity: 0.3;
     transform: scale(0.92);
     pointer-events: none;
+}
+
+/* ===============================
+        RESPONSIVIDADE
+=============================== */
+
+/* 📱 MOBILE */
+@media (max-width: 600px) {
+
+    .board {
+        width: 92vmin;
+        height: 92vmin;
+        gap: 2.2vmin;
+    }
+
+    .cell {
+        font-size: 10vmin;
+    }
+
+    .small-board {
+        gap: 1.6vmin;
+    }
+
+    .small-cell {
+        font-size: 4.2vmin;
+    }
+
+    .winner-overlay {
+        font-size: 14vmin;
+    }
+}
+
+/* 📲 TABLET */
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .board {
+        width: 75vmin;
+        height: 75vmin;
+        gap: 1.8vmin;
+    }
+
+    .cell {
+        font-size: 7vmin;
+    }
+
+    .small-board { gap: 1.2vmin; }
+    .small-cell { font-size: 3.5vmin; }
+
+    .winner-overlay { font-size: 12vmin; }
+}
+
+/* 🖥️ DESKTOP */
+@media (min-width: 901px) {
+
+    .board {
+        width: min(60vmin, 480px);
+        height: min(60vmin, 480px);
+        gap: 1.4vmin;
+    }
+
+    .cell {
+        font-size: 5vmin;
+    }
+
+    .small-board { gap: 1vmin; }
+    .small-cell { font-size: 2.8vmin; }
+
+    .winner-overlay { font-size: 10vmin; }
+}
+
+/* 🖥️🖥️ MONITORES GRANDES */
+@media (min-width: 1600px) {
+
+    .board {
+        width: min(50vmin, 520px);
+        height: min(50vmin, 520px);
+    }
+
+    .cell {
+        font-size: 4vmin;
+    }
+
+    .small-cell {
+        font-size: 2.4vmin;
+    }
+
+    .winner-overlay {
+        font-size: 8vmin;
+    }
 }

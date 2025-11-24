@@ -162,15 +162,17 @@ body::before {
 /* GAME AREA */
 .game-container { text-align: center; animation: fadeIn 1.2s ease-in-out; }
 
+/* BOARD RESPONSIVO */
 .board {
-    width: 300px;
-    height: 300px;
+    width: min(80vmin, 500px);
+    height: min(80vmin, 500px);
     margin: 0 auto 30px;
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: repeat(3,1fr);
-    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1.6vmin;
 }
+
 
 .status {
     font-size: 1.4rem;
@@ -187,21 +189,22 @@ body::before {
     color: var(--text);
 }
 
-/* CELLS */
+/* CELLS RESPONSIVAS */
 .cell {
     background: rgba(255,255,255,0.05);
     border: 2px solid var(--neon-1);
     border-radius: 10px;
-    font-size: 2.2rem;
     font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    min-width: 80px;
-    min-height: 80px;
+
+    /* tamanhos dinâmicos */
+    font-size: 8vmin;
     transition: color .3s;
 }
+
 
 .selected { animation: neonPulse 0.8s infinite alternate; }
 
@@ -369,14 +372,74 @@ body::before {
 .popup-scroll-wrapper .close-btn {
     margin-top: 0px;
 }
+/* ===============================
+   RESPONSIVE GLOBAL
+=============================== */
 
-/* RESPONSIVE */
-@media (max-width: 700px) {
+/* 📱 MOBILE */
+@media (max-width: 600px) {
+
     .header { height: 60px; padding: 10px 15px; }
+
     .toggle-btn.theme-icon,
     .toggle-btn.help-icon,
-    .toggle-btn.home-icon { width: 38px; height: 38px; }
+    .toggle-btn.home-icon {
+        width: 36px;
+        height: 36px;
+    }
+
     .header .title { font-size: 2rem; }
     .buttons { width: 200px; }
     .btn { font-size: 1.1rem; }
+
+    .board {
+        width: 90vmin;
+        height: 90vmin;
+        gap: 2.2vmin;
+    }
+
+    .cell {
+        font-size: 9vmin;
+    }
+}
+
+/* 📲 TABLET */
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .board {
+        width: 75vmin;
+        height: 75vmin;
+        gap: 1.8vmin;
+    }
+
+    .cell {
+        font-size: 6vmin;
+    }
+}
+
+/* 🖥️ DESKTOP PADRÃO */
+@media (min-width: 901px) {
+
+    .board {
+        width: min(60vmin, 480px);
+        height: min(60vmin, 480px);
+        gap: 1.5vmin;
+    }
+
+    .cell {
+        font-size: 4vmin;
+    }
+}
+
+/* 🖥️🖥️ TELAS GRANDES */
+@media (min-width: 1600px) {
+
+    .board {
+        width: min(50vmin, 520px);
+        height: min(50vmin, 520px);
+    }
+
+    .cell {
+        font-size: 3vmin;
+    }
 }
