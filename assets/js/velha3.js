@@ -246,6 +246,7 @@ function applySnapshot(snapshot) {
 
     clearBigWinHighlights();
     updateActiveBoard();
+    restartNeonAnimation();
 }
 
 function undoSnapshot() {
@@ -436,12 +437,7 @@ function restartGame() {
 
     createSmallBoards();
 
-    // 🔥 REINICIA A ANIMAÇÃO NEON DE TODAS AS CÉLULAS 🔥
-    document.querySelectorAll(".small-cell").forEach(c => {
-        c.style.animation = "none";
-        void c.offsetWidth;
-        c.style.animation = "";
-    });
+    restartNeonAnimation()
 
     bindBoardEvents();
 
@@ -449,8 +445,19 @@ function restartGame() {
     updateActiveBoard();
 }
 
+/* ========================
+   18. RESET DE ANIMAÇÃO NEON
+======================== */
+
+function restartNeonAnimation() {
+    document.querySelectorAll(".small-cell").forEach(c => {
+        c.style.animation = "none";
+        void c.offsetWidth; // força reflow → reinicia a animação
+        c.style.animation = "";
+    });
+}
 
 /* ========================
-   18. START
+   19. START
 ======================== */
 init();
