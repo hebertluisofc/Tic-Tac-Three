@@ -300,6 +300,7 @@ body::before {
     text-align: left;
     animation: fadeIn .3s ease, neonBorder 6s infinite linear;
     max-height: 80vh;
+    max-width: 300px;
 }
 
 /* WRAPPER INTERNO PARA O SCROLL */
@@ -359,14 +360,14 @@ body::before {
 }
 
 .close-btn {
-    margin-top: 10px;
+    margin-top: 30px;
     width: 90%;
     padding: 10px;
     font-size: 1.1rem;
 }
 
 .popup-scroll-wrapper .close-btn {
-    margin-left: 15px;
+    margin-top: 0px;
 }
 
 /* RESPONSIVE */
