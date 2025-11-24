@@ -193,14 +193,12 @@ body::before {
 .cell {
     background: rgba(255,255,255,0.05);
     border: 2px solid var(--neon-1);
-    border-radius: 10px;
+    border-radius: 50px;
     font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-
-    /* tamanhos dinâmicos */
     font-size: 8vmin;
     transition: color .3s;
 }
