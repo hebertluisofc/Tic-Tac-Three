@@ -435,11 +435,20 @@ function restartGame() {
     pushSnapshot();
 
     createSmallBoards();
+
+    // 🔥 REINICIA A ANIMAÇÃO NEON DE TODAS AS CÉLULAS 🔥
+    document.querySelectorAll(".small-cell").forEach(c => {
+        c.style.animation = "none";
+        void c.offsetWidth;
+        c.style.animation = "";
+    });
+
     bindBoardEvents();
 
     updateUndoButton();
     updateActiveBoard();
 }
+
 
 /* ========================
    18. START
