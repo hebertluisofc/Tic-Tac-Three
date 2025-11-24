@@ -303,7 +303,7 @@ body::before {
     text-align: left;
     animation: fadeIn .3s ease, neonBorder 6s infinite linear;
     max-height: 80vh;
-    max-width: 300px;
+    max-width: 350px;
 }
 
 /* WRAPPER INTERNO PARA O SCROLL */
