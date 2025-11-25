@@ -116,8 +116,8 @@
 @media (max-width: 600px) {
 
     .board {
-        width: 92vmin;
-        height: 92vmin;
+        width: 80vmin;
+        height: 80vmin;
         gap: 2.2vmin;
     }
 
@@ -139,11 +139,11 @@
 }
 
 /* 📲 TABLET */
-@media (min-width: 601px) and (max-width: 900px) {
+@media (min-width: 601px) and (max-width: 800px) {
 
     .board {
-        width: 75vmin;
-        height: 75vmin;
+        width: 55vmin;
+        height: 55vmin;
         gap: 1.8vmin;
     }
 
@@ -161,8 +161,8 @@
 @media (min-width: 901px) {
 
     .board {
-        width: min(60vmin, 480px);
-        height: min(60vmin, 480px);
+        width: min(55vmin, 480px);
+        height: min(55vmin, 480px);
         gap: 1.4vmin;
     }
 
@@ -180,8 +180,8 @@
 @media (min-width: 1600px) {
 
     .board {
-        width: min(50vmin, 520px);
-        height: min(50vmin, 520px);
+        width: min(80vmin, 620px);
+        height: min(80vmin, 620px);
     }
 
     .cell {

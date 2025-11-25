@@ -391,8 +391,8 @@ body::before {
     .btn { font-size: 1.1rem; }
 
     .board {
-        width: 90vmin;
-        height: 90vmin;
+        width: 70vmin;
+        height: 70vmin;
         gap: 2.2vmin;
     }
 
@@ -405,8 +405,8 @@ body::before {
 @media (min-width: 601px) and (max-width: 900px) {
 
     .board {
-        width: 75vmin;
-        height: 75vmin;
+        width: 55vmin;
+        height: 55vmin;
         gap: 1.8vmin;
     }
 
@@ -419,8 +419,8 @@ body::before {
 @media (min-width: 901px) {
 
     .board {
-        width: min(60vmin, 480px);
-        height: min(60vmin, 480px);
+        width: min(50vmin, 480px);
+        height: min(50vmin, 480px);
         gap: 1.5vmin;
     }
 
