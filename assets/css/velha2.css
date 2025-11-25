@@ -1,3 +1,7 @@
+/* ===================================
+   assets/css/velha2.css - Estilos específicos para o jogo da velha 2
+=================================== */
+
 /* Contêiner fixo para seletor e timer */
 .timer-container {
     position: relative;

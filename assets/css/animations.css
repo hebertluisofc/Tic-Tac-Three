@@ -1,56 +1,102 @@
 /* ===================================
-   assets/css/animations.css - Animações CSS para o jogo da velha
+   assets/css/animations.css — Animações Globais
 =================================== */
 
-/* Neon pulsante para textos */
+/* ===================================
+   Animações de Neon
+=================================== */
+
+/* Ciclo de cores neon para textos */
 @keyframes neonCycle {
-    0%, 100% { color: var(--neon-1); text-shadow: 0 0 12px var(--neon-1); }
-    33% { color: var(--neon-2); text-shadow: 0 0 12px var(--neon-2); }
-    66% { color: var(--neon-3); text-shadow: 0 0 12px var(--neon-3); }
+    0%, 100% {
+        color: var(--neon-1);
+        text-shadow: 0 0 12px var(--neon-1);
+    }
+    33% {
+        color: var(--neon-2);
+        text-shadow: 0 0 12px var(--neon-2);
+    }
+    66% {
+        color: var(--neon-3);
+        text-shadow: 0 0 12px var(--neon-3);
+    }
 }
 
-/* Neon pulsante para bordas */
+/* Ciclo neon para bordas */
 @keyframes neonBorder {
-    0%, 100% { border-color: var(--neon-1); box-shadow: 0 0 10px var(--neon-1); }
-    33% { border-color: var(--neon-2); box-shadow: 0 0 10px var(--neon-2); }
-    66% { border-color: var(--neon-3); box-shadow: 0 0 10px var(--neon-3); }
+    0%, 100% {
+        border-color: var(--neon-1);
+        box-shadow: 0 0 10px var(--neon-1);
+    }
+    33% {
+        border-color: var(--neon-2);
+        box-shadow: 0 0 10px var(--neon-2);
+    }
+    66% {
+        border-color: var(--neon-3);
+        box-shadow: 0 0 10px var(--neon-3);
+    }
 }
 
-/* Neon sombra para rodapé */
+/* Neon para rodapés */
 @keyframes neonShadow {
-    0%, 100% { box-shadow: 0 -3px 10px var(--neon-1); }
-    33% { box-shadow: 0 -3px 10px var(--neon-2); }
-    66% { box-shadow: 0 -3px 10px var(--neon-3); }
+    0%, 100% {
+        box-shadow: 0 -3px 10px var(--neon-1);
+    }
+    33% {
+        box-shadow: 0 -3px 10px var(--neon-2);
+    }
+    66% {
+        box-shadow: 0 -3px 10px var(--neon-3);
+    }
 }
 
-/* Fade In (entradas de elementos) */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Animação de vitória: pulsando com brilho */
-@keyframes winGlow {
-    0% { transform: scale(1); box-shadow: 0 0 8px currentColor; }
-    50% { transform: scale(1.15); box-shadow: 0 0 20px currentColor; }
-    100% { transform: scale(1); box-shadow: 0 0 8px currentColor; }
-}
-
-/* animação de rotação */
-@keyframes btnBrilho {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Pulsar neon (mesma ideia das bordas neon) */
+/* Pulsar suave com brilho único (neon estável) */
 @keyframes neonPulse {
-    0% {
-        box-shadow: 0 0 5px var(--neon-1), 0 0 10px var(--neon-1);
+    0%, 100% {
+        box-shadow: 0 0 5px var(--neon-1),
+                    0 0 10px var(--neon-1);
     }
     50% {
-        box-shadow: 0 0 15px var(--neon-1), 0 0 25px var(--neon-1);
+        box-shadow: 0 0 15px var(--neon-1),
+                    0 0 25px var(--neon-1);
     }
-    100% {
-        box-shadow: 0 0 5px var(--neon-1), 0 0 10px var(--neon-1);
+}
+
+/* ===================================
+   Animações de Interface
+=================================== */
+
+/* Fade-in geral (entradas de elementos) */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Brilho oscilante ao vencer */
+@keyframes winGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 8px currentColor;
+    }
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px currentColor;
+    }
+}
+
+/* Rotação contínua (usado em botões) */
+@keyframes btnBrilho {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }
